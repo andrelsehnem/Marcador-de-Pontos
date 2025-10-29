@@ -1,0 +1,84 @@
+# ==========================================
+# Unity gitignore
+# ==========================================
+
+# --- Diretórios gerados automaticamente ---
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+UserSettings/
+MemoryCaptures/
+Recordings/
+
+# --- Cache do Unity ---
+Artifacts/
+ScriptAssemblies/
+SceneTemplateCache/
+*.pidb
+*.booproj
+*.suo
+*.user
+*.userprefs
+*.csproj
+*.unityproj
+*.sln
+*.swp
+*.tmp
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# --- Pacotes gerados localmente ---
+/Packages/com.unity.timeline/Tests/Editor/AssetStoreTools*
+/Assets/AssetStoreTools*
+*.unitypackage
+
+# --- Sistema Operacional ---
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# --- Visual Studio / Rider ---
+.vs/
+.idea/
+*.DotSettings
+*.dotCover
+*.orig
+*.user
+*.suo
+
+# --- Cache do Build Player ---
+/Builds/
+/Build/
+
+# --- Logs e temporários ---
+*.log
+*.stackdump
+
+# --- Cache de iluminação e GI ---
+/LightmapSnapshot.asset
+/LightmapSettings.asset
+/LightingData.asset
+/[Ll]ightingData*/
+*/Lightmap-*
+/GlobalIllumination/
+
+# --- TextMeshPro ---
+/Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset.meta
+
+# --- Addressables ---
+/ServerData/
+*.addressables
+*.bin
+
+# --- Outros ---
+sysinfo.txt
+
+Builds/
