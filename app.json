@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "Marcador de Baralho",
+    "slug": "marcador-de-baralho",
+    "version": "2.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "schemes": [
+      "myapp"
+    ],
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
