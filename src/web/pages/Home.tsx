@@ -51,7 +51,7 @@ const Home: React.FC = () => {
           />
 
           <Button
-            text={`${theme === 'light' ? '☀️' : '🌙'}`}
+            text={`${theme === 'dark' ? '☀️' : '🌙'}`}
             backgroundColor={themeStyles.buttonSecondary.bg}
             textColor={themeStyles.buttonSecondary.text}
             onClick={toggleTheme}
