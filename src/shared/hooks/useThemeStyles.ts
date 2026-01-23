@@ -24,7 +24,7 @@ export const useThemeStyles = () => {
         text: '#ffffff',
       },
       buttonSecondary: {
-        bg: isDark ? COLORS.background.dark2 : COLORS.background.light2,
+        bg: COLORS.secondary ,
         text: isDark ? COLORS.text.dark : COLORS.text.primary,
         border: COLORS.border,
         borderWidth: 1,

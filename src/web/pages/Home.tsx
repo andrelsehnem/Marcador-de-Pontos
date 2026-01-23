@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Home.css';
 import Button from '../../shared/components/Button';
 import { useTheme } from '../../shared/contexts/ThemeContext';
 import { useThemeStyles } from '../../shared/hooks/useThemeStyles';
 import { useResponsive } from '../../shared/hooks/useResponsive';
+import Cacheta from './Cacheta';
 
 const Home: React.FC = () => {
+  const [showCacheta, setShowCacheta] = useState(false);
   const { toggleTheme, theme } = useTheme();
   const themeStyles = useThemeStyles();
   const responsive = useResponsive();
+
+  if (showCacheta) {
+    return <Cacheta onBack={() => setShowCacheta(false)} />;
+  }
 
   return (
     <div
@@ -38,7 +44,7 @@ const Home: React.FC = () => {
             text={responsive.isMobile ? 'Cacheta' : 'Cacheta'}
             backgroundColor={themeStyles.buttonPrimaryAlt.bg}
             textColor={themeStyles.buttonPrimaryAlt.text}
-            onClick={() => console.log('Histórico')}
+            onClick={() => setShowCacheta(true)}
             className="button-secondary"
             borderColor={themeStyles.buttonSecondary.border}
             borderWidth={themeStyles.buttonSecondary.borderWidth}
