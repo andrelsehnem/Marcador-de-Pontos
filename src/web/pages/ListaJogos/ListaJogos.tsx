@@ -31,7 +31,7 @@ const ListaJogos: React.FC<{ onNavigate: (page: string) => void }> = ({ onNaviga
             text="Truco"
             backgroundColor={themeStyles.buttonPrimary.bg}
             textColor={themeStyles.buttonPrimary.text}
-            onClick={() => console.log('Novo Jogo')}
+            onClick={() => onNavigate('truco')}
           />
 
           <Button

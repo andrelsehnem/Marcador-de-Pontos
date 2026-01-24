@@ -4,6 +4,7 @@ import { ThemeProvider } from './shared/contexts/ThemeContext';
 import ListaJogos from './web/pages/ListaJogos/ListaJogos';
 import Landing from './web/pages/Landing/Landing';
 import Cacheta from './web/pages/Cacheta/Cacheta';
+import Truco from './web/pages/Truco/Truco';
 import { Analytics } from "@vercel/analytics/react"
 
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
       const path = window.location.pathname;
       if (path === '/listajogos') setCurrentPage('listajogos');
       else if (path === '/cacheta') setCurrentPage('cacheta');
+      else if (path === '/truco') setCurrentPage('truco');
       else setCurrentPage('landing');
     };
 
@@ -34,6 +36,7 @@ export default function App() {
       <ThemeProvider>
         {currentPage === 'landing' && <Landing onNavigate={navigateTo} />}
         {currentPage === 'listajogos' && <ListaJogos onNavigate={navigateTo} />}
+        {currentPage === 'truco' && <Truco onBack={() => navigateTo('listajogos')} />}
         {currentPage === 'cacheta' && <Cacheta onBack={() => navigateTo('listajogos')} />}
       </ThemeProvider>
       <Analytics />
