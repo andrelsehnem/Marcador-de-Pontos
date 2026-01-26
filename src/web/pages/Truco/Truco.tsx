@@ -1,248 +1,192 @@
 import React, { useState, useEffect } from 'react';
+import { RotateCcw, Menu, Clock, ArrowLeft } from 'lucide-react';
 import './Truco.css';
-import { useThemeStyles } from '../../../shared/hooks/useThemeStyles';
 import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
+import { useTheme } from '../../../shared/contexts/ThemeContext';
 
-interface Team {
-    id: number;
-    name: string;
-    score: number;
-}
+export default function TrucoPaulista() {
+    const { theme } = useTheme();
+    const [nosScore, setNosScore] = useState(() => {
+        const saved = localStorage.getItem('truco-nosScore');
+        return saved ? parseInt(saved) : 0;
+    });
+    const [elesScore, setElesScore] = useState(() => {
+        const saved = localStorage.getItem('truco-elesScore');
+        return saved ? parseInt(saved) : 0;
+    });
+    const [pontosRodada, setPontosRodada] = useState(() => {
+        const saved = localStorage.getItem('truco-pontosRodada');
+        return saved ? parseInt(saved) : 1;
+    });
+    const [winner, setWinner] = useState<'nos' | 'eles' | null>(() => {
+        const saved = localStorage.getItem('truco-winner');
+        return saved ? (saved as 'nos' | 'eles') : null;
+    });
 
-const Truco: React.FC<{ onBack: () => void }> = ({ onBack }) => {
-    const themeStyles = useThemeStyles();
-    const [teams, setTeams] = useState<Team[]>([
-        { id: 1, name: 'Nós', score: 0 },
-        { id: 2, name: 'Eles', score: 0 },
-    ]);
-    const [editingId, setEditingId] = useState<number | null>(null);
-    const [editingName, setEditingName] = useState<string>('');
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [maxScore] = useState(12);
-
-    // Carrega os dados do localStorage ao montar o componente
+    // Salvar no localStorage sempre que os estados mudarem
     useEffect(() => {
-        const savedTeams = localStorage.getItem('truco_teams');
-        if (savedTeams) {
-            try {
-                setTeams(JSON.parse(savedTeams));
-            } catch (error) {
-                console.error('Erro ao carregar equipes do cache:', error);
-            }
-        }
-    }, []);
-
-    // Salva as equipes no localStorage sempre que elas mudam
-    useEffect(() => {
-        localStorage.setItem('truco_teams', JSON.stringify(teams));
-    }, [teams]);
-
-    // Verifica se alguma equipe ganhou
-    useEffect(() => {
-        const winner = teams.find(team => team.score >= maxScore);
-        if (winner) {
-            setTimeout(() => {
-                alert(`🎉 ${winner.name} venceu com ${winner.score} pontos!`);
-            }, 100);
-        }
-    }, [teams, maxScore]);
-
-    const updateScore = (teamId: number, points: number) => {
-        setTeams(teams.map(t =>
-            t.id === teamId ? { ...t, score: Math.max(0, t.score + points) } : t
-        ));
-    };
-
-    const startEditingName = (team: Team) => {
-        setEditingId(team.id);
-        setEditingName(team.name);
-    };
-
-    const saveName = (teamId: number) => {
-        setTeams(teams.map(t =>
-            t.id === teamId ? { ...t, name: editingName } : t
-        ));
-        setEditingId(null);
-        setEditingName('');
-    };
+        localStorage.setItem('truco-nosScore', nosScore.toString());
+        localStorage.setItem('truco-elesScore', elesScore.toString());
+        localStorage.setItem('truco-pontosRodada', pontosRodada.toString());
+        localStorage.setItem('truco-winner', winner || '');
+    }, [nosScore, elesScore, pontosRodada, winner]);
 
     const resetGame = () => {
-        setTeams(teams.map(t => ({ ...t, score: 0 })));
+        setNosScore(0);
+        setElesScore(0);
+        setPontosRodada(1);
+        setWinner(null);
     };
 
-    const resetTeams = () => {
-        setTeams([
-            { id: 1, name: 'Nós', score: 0 },
-            { id: 2, name: 'Eles', score: 0 },
-        ]);
+    const handlePonto1 = () => {
+        setPontosRodada(1);
+    };
+
+    const handleTruco3 = () => {
+        setPontosRodada(3);
+    };
+
+    const handleTruco6 = () => {
+        setPontosRodada(6);
+    };
+
+    const handleTruco12 = () => {
+        setPontosRodada(12);
+    };
+
+    const handleAddNosScore = () => {
+        if (winner) return; 
+        const newScore = nosScore + pontosRodada;
+        setNosScore(newScore);
+        setPontosRodada(1);
+        if (newScore >= 12) {
+            setWinner('nos');
+        }
+    };
+
+    const handleAddElesScore = () => {
+        if (winner) return; 
+        const newScore = elesScore + pontosRodada;
+        setElesScore(newScore);
+        setPontosRodada(1);
+        if (newScore >= 12) {
+            setWinner('eles');
+        }
     };
 
     return (
-        <div
-            className="truco-container"
-            style={{ backgroundColor: themeStyles.containerBg }}
-        >
-            <ThemeToggle />
-            
-            {/* Sidebar */}
-            <div 
-                className={`truco-sidebar ${sidebarOpen ? 'open' : ''}`}
-                style={{ backgroundColor: themeStyles.buttonPrimary.bg }}
-            >
-                <div className="sidebar-header">
-                    <h2 style={{ color: themeStyles.buttonPrimary.text }}>Menu</h2>
-                    <button
-                        className="sidebar-close"
-                        onClick={() => setSidebarOpen(false)}
-                        style={{ color: themeStyles.buttonPrimary.text }}
-                    >
-                        ✕
-                    </button>
-                </div>
-                <div className="sidebar-content">
-                    <button
-                        className="sidebar-button"
-                        onClick={() => {
-                            onBack();
-                            setSidebarOpen(false);
-                        }}
-                        style={{ 
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                            color: themeStyles.buttonPrimary.text 
-                        }}
-                    >
-                        <span className="sidebar-button-icon">←</span>
-                        <span>Voltar</span>
-                    </button>
-                    <button
-                        className="sidebar-button"
-                        onClick={() => {
-                            resetGame();
-                            setSidebarOpen(false);
-                        }}
-                        style={{ 
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                            color: themeStyles.buttonPrimary.text 
-                        }}
-                    >
-                        <span className="sidebar-button-icon">🔄</span>
-                        <span>Zerar Placar</span>
-                    </button>
-                    
-                </div>
-            </div>
-
-            {/* Overlay */}
-            {sidebarOpen && (
-                <div 
-                    className="sidebar-overlay"
-                    onClick={() => setSidebarOpen(false)}
-                />
-            )}
-
+        <div className="truco-container" data-theme={theme}>
             {/* Header */}
-            <div className="truco-header" style={{ backgroundColor: themeStyles.buttonPrimary.bg }}>
-                <button
-                    className="burger-button"
-                    onClick={() => setSidebarOpen(true)}
-                    style={{ color: themeStyles.buttonPrimary.text }}
-                >
-                    <div className="burger-line"></div>
-                    <div className="burger-line"></div>
-                    <div className="burger-line"></div>
+            <div className="truco-header">
+                <button className="truco-back-btn" onClick={() => window.history.back()}>
+                    <ArrowLeft size={24} />
                 </button>
-                <h1
-                    className="truco-title"
-                    style={{ color: themeStyles.buttonPrimary.text }}
-                >
-                    Truco
-                </h1>
+                
             </div>
 
-            <div className="truco-scoreboard">
-                {teams.map(team => (
-                    <div
-                        key={team.id}
-                        className={`team-card ${team.score >= maxScore ? 'winner' : ''}`}
-                        style={{ backgroundColor: themeStyles.surface }}
-                    >
-                        <div className="team-header">
-                            {editingId === team.id ? (
-                                <input
-                                    type="text"
-                                    className="team-name-input"
-                                    style={{
-                                        borderColor: themeStyles.buttonPrimary.bg,
-                                        color: '#000000',
-                                        backgroundColor: '#ffffff'
-                                    }}
-                                    value={editingName}
-                                    onChange={(e) => setEditingName(e.target.value)}
-                                    onBlur={() => saveName(team.id)}
-                                    onKeyPress={(e) => e.key === 'Enter' && saveName(team.id)}
-                                    autoFocus
-                                />
-                            ) : (
-                                <h2
-                                    className="team-name"
-                                    style={{ color: themeStyles.textPrimary }}
-                                    onClick={() => startEditingName(team)}
-                                    title="Clique para editar"
-                                >
-                                    {team.name}
-                                </h2>
-                            )}
-                        </div>
-                        <div
-                            className="team-score"
-                            style={{ color: team.score >= maxScore ? '#20c997' : themeStyles.buttonPrimary.bg }}
-                        >
-                            {team.score}
-                        </div>
-                        <div className="score-bar-container">
-                            <div 
-                                className="score-bar"
-                                style={{ 
-                                    width: `${(team.score / maxScore) * 100}%`,
-                                    backgroundColor: team.score >= maxScore ? '#20c997' : themeStyles.buttonPrimary.bg
-                                }}
-                            />
-                        </div>
-                        <div className="button-group">
-                            <button
-                                className="score-button subtract-button"
-                                onClick={() => updateScore(team.id, -3)}
-                                style={{ backgroundColor: themeStyles.buttonSecondary.bg }}
-                            >
-                                -3
-                            </button>
-                            <button
-                                className="score-button subtract-button"
-                                onClick={() => updateScore(team.id, -1)}
-                                style={{ backgroundColor: themeStyles.buttonSecondary.bg }}
-                            >
-                                -1
-                            </button>
-                            <button
-                                className="score-button add-button"
-                                onClick={() => updateScore(team.id, 1)}
-                                style={{ backgroundColor: themeStyles.buttonPrimary.bg }}
-                            >
-                                +1
-                            </button>
-                            <button
-                                className="score-button add-button"
-                                onClick={() => updateScore(team.id, 3)}
-                                style={{ backgroundColor: themeStyles.buttonPrimary.bg }}
-                            >
-                                +3
-                            </button>
-                        </div>
+            <ThemeToggle />
+
+            {/* Score Cards */}
+            <div className="truco-score-section">
+                {/* Nós Card */}
+                <div 
+                    className={`truco-score-card ${winner === 'nos' ? 'winner' : winner === 'eles' ? 'loser' : ''}`}
+                    onClick={handleAddNosScore}
+                >
+                    <div className="truco-score-card-content">
+                        <div className="truco-team-label">NÓS</div>
+                        <div className="truco-score">{nosScore}</div>
+                        <div className="truco-rounds">+{pontosRodada}</div>
                     </div>
-                ))}
+                </div>
+
+                {/* Eles Card */}
+                <div 
+                    className={`truco-score-card ${winner === 'eles' ? 'winner' : winner === 'nos' ? 'loser' : ''}`}
+                    onClick={handleAddElesScore}
+                >
+                    <div className="truco-score-card-content">
+                        <div className="truco-team-label">ELES</div>
+                        <div className="truco-score">{elesScore}</div>
+                        <div className="truco-rounds">+{pontosRodada}</div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="truco-actions">
+                <button
+                    onClick={handlePonto1}
+                    className="truco-btn-primary"
+                >
+                    <span className="truco-btn-emoji">🃏</span>
+                    1 PONTO
+                    <span className="truco-btn-emoji">🃏</span>
+                </button>
+
+                <button
+                    onClick={handleTruco3}
+                    className="truco-btn-primary"
+                >
+                    <span className="truco-btn-emoji">🔥</span>
+                    TRUCO 3 PONTOS
+                    <span className="truco-btn-emoji">🔥</span>
+                </button>
+
+                <button
+                    onClick={handleTruco6}
+                    className="truco-btn-primary"
+                >
+                    <span className="truco-btn-emoji">🔪</span>
+                    TRUCO 6 PONTOS
+                    <span className="truco-btn-emoji">🔪</span>
+                </button>
+
+
+                <button
+                    onClick={handleTruco12}
+                    className="truco-btn-primary"
+                >
+                    <span className="truco-btn-emoji">🌡</span>
+                    TRUCO 12 PONTOS
+                    <span className="truco-btn-emoji">🌡</span>
+                </button>
+
+                <div className="truco-btn-row">
+                    <button
+                        onClick={() => {
+                            const newScore = Math.max(0, nosScore - 1);
+                            setNosScore(newScore);
+                            if (newScore < 12 && elesScore < 12) {
+                                setWinner(null);
+                            }
+                        }}
+                        className="truco-btn-secondary"
+                    >
+                        NÓS -1 Ponto
+                    </button>
+                    <button
+                        onClick={() => {
+                            const newScore = Math.max(0, elesScore - 1);
+                            setElesScore(newScore);
+                            if (newScore < 12 && nosScore < 12) {
+                                setWinner(null);
+                            }
+                        }}
+                        className="truco-btn-secondary"
+                    >
+                        ELES -1 Ponto
+                    </button>
+                </div>
+
+                <button
+                    onClick={resetGame}
+                    className="truco-btn-reset"
+                >
+                    <RotateCcw />
+                    Reiniciar Rodada
+                </button>
             </div>
         </div>
     );
-};
-
-export default Truco;
+}
