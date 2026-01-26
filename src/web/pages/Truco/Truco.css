@@ -1,390 +1,303 @@
-* {
-  box-sizing: border-box;
+:root {
+  /* Light Theme */
+  --truco-bg: #F8FAFC;
+  --truco-text: #1A1A1A;
+  --truco-card-bg: #FFFFFF;
+  --truco-card-border: #E0E0E0;
+  --truco-label: #666666;
+  --truco-rounds: #999999;
+  --truco-btn-secondary-bg: #E5E7EB;
+  --truco-btn-secondary-hover: #D1D5DB;
+  --truco-btn-secondary-active: #9CA3AF;
+}
+
+[data-theme="dark"] {
+  /* Dark Theme */
+  --truco-bg: #0F172A;
+  --truco-text: #F1F5F9;
+  --truco-card-bg: #1E293B;
+  --truco-card-border: #334155;
+  --truco-label: #94A3B8;
+  --truco-rounds: #64748B;
+  --truco-btn-secondary-bg: #1E293B;
+  --truco-btn-secondary-hover: #334155;
+  --truco-btn-secondary-active: #475569;
 }
 
 .truco-container {
+  min-height: 100vh;
+  background-color: var(--truco-bg);
+  color: var(--truco-text);
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 100vw;
-  height: 100vh;
-  background-color: #f5f5f5;
-  position: relative;
-  overflow: hidden;
 }
 
 .truco-header {
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 16px 20px;
-  background-color: #6c5ce7;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  position: relative;
-  z-index: 10;
-}
-
-/* Burger Menu Button */
-.burger-button {
-  position: absolute;
-  left: 20px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  z-index: 11;
-}
-
-.burger-line {
-  width: 24px;
-  height: 3px;
-  background-color: white;
-  border-radius: 2px;
-  transition: all 0.3s ease;
-}
-
-.burger-button:hover .burger-line {
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
-/* Sidebar */
-.truco-sidebar {
-  position: fixed;
-  left: -280px;
-  top: 0;
-  width: 280px;
-  height: 100vh;
-  background-color: #6c5ce7;
-  z-index: 1001;
-  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-}
-
-.truco-sidebar.open {
-  left: 0;
-}
-
-.sidebar-header {
-  display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  padding-top: 1rem;
 }
 
-.sidebar-header h2 {
-  margin: 0;
-  font-size: 1.5rem;
-  color: white;
-}
-
-.sidebar-close {
+.truco-back-btn {
   background: none;
   border: none;
-  color: white;
-  font-size: 24px;
+  color: var(--truco-text);
   cursor: pointer;
-  padding: 4px 8px;
-  transition: transform 0.2s ease;
-}
-
-.sidebar-close:hover {
-  transform: scale(1.2);
-}
-
-.sidebar-content {
-  flex: 1;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  overflow-y: auto;
-}
-
-.sidebar-button {
+  padding: 0.5rem;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: left;
-  width: 100%;
+  justify-content: center;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
 }
 
-.sidebar-button:hover {
-  transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+.truco-back-btn:hover {
+  background-color: var(--truco-btn-secondary-hover);
 }
 
-.sidebar-button:active {
-  transform: translateX(2px);
-}
-
-.sidebar-button-icon {
-  font-size: 1.2rem;
-  min-width: 24px;
-  text-align: center;
-}
-
-/* Sidebar Overlay */
-.sidebar-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.truco-back-btn:active {
+  background-color: var(--truco-btn-secondary-active);
 }
 
 .truco-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: white;
-  margin: 0;
+  font-size: 1.25rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
 }
 
-.truco-scoreboard {
+.truco-header-icons {
+  display: flex;
+  gap: 1rem;
+}
+
+.truco-header-icons svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.truco-score-section {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0 0.75rem;
+  margin-top: 1rem;
+  margin-bottom: 0.25em;
+}
+
+.truco-score-card {
+  flex: 1;
+  background-color: var(--truco-card-bg);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  border: 1px solid var(--truco-card-border);
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s, background-color 0.3s;
+}
+
+.truco-score-card:hover {
+  transform: scale(1.02);
+  border-color: #FF6B35;
+}
+
+.truco-score-card:active {
+  transform: scale(0.98);
+}
+
+.truco-score-card.winner {
+  background-color: #22c55e;
+  border-color: #16a34a;
+}
+
+.truco-score-card.winner:hover {
+  border-color: #15803d;
+}
+
+.truco-score-card.loser {
+  background-color: #ef4444;
+  border-color: #dc2626;
+}
+
+.truco-score-card.loser:hover {
+  border-color: #b91c1c;
+}
+
+.truco-score-card.winner .truco-team-label,
+.truco-score-card.winner .truco-score,
+.truco-score-card.winner .truco-rounds,
+.truco-score-card.loser .truco-team-label,
+.truco-score-card.loser .truco-score,
+.truco-score-card.loser .truco-rounds {
+  color: white;
+}
+
+.truco-score-card-content {
+  text-align: center;
+}
+
+.truco-team-label {
+  font-size: 1rem;
+  letter-spacing: clamp(0.08em, 0.3vw, 0.12em);
+  margin-bottom: clamp(0.5rem, 2vw, 1rem);
+  color: var(--truco-label);
+}
+
+.truco-score {
+  font-size: 6rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.truco-rounds {
+  font-size: 1.875rem;
+  color: var(--truco-rounds);
+}
+
+.truco-round-info {
+  margin: 1.5rem 0.75rem 0;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  border: 2px solid #FF6B35;
+  background-color: transparent;
+}
+
+.truco-round-info-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #FF6B35;
+}
+
+.truco-round-star {
+  font-size: 1.5rem;
+}
+
+.truco-round-text {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.truco-game-info {
+  text-align: center;
+  color: var(--truco-label);
+  font-size: 0.875rem;
+  margin-top: 0.75rem;
+}
+
+.truco-actions {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0;
-  padding: 0;
-  overflow: hidden;
+  justify-content: flex-end;
+  padding: 0 0.75rem 5rem;
+  padding-top: 0rem;
+  gap: 1rem;
+}
+
+.truco-btn-primary {
   width: 100%;
-}
-
-.team-card {
-  background-color: white;
-  border-radius: 0;
-  padding: 24px;
-  box-shadow: none;
-  text-align: center;
-  transition: all 0.3s ease;
-  width: 100%;
-  height: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border: none;
-  border-bottom: 2px solid #e0e0e0;
-}
-
-.team-card:last-child {
-  border-bottom: none;
-}
-
-.team-card.winner {
-  border-color: #20c997;
-  box-shadow: inset 0 0 30px rgba(32, 201, 151, 0.2);
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.01);
-  }
-}
-
-.team-card:hover {
-  background-color: #f8f9fa;
-}
-
-.team-header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.team-name {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0;
-  cursor: pointer;
-  padding: 10px 20px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-
-.team-name:hover {
-  background-color: #6c5ce7;
-  color: #ffffff;
-}
-
-.team-name-input {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  border: 3px solid #6c5ce7;
-  border-radius: 8px;
-  padding: 10px 20px;
-  text-align: center;
-  font-family: inherit;
-  width: 100%;
-}
-
-.team-score {
-  font-size: 5rem;
-  font-weight: 800;
-  color: #6c5ce7;
-  margin: 20px 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.score-bar-container {
-  width: 100%;
-  height: 12px;
-  background-color: #e0e0e0;
-  border-radius: 6px;
-  overflow: hidden;
-  margin: 20px 0;
-}
-
-.score-bar {
-  height: 100%;
-  transition: width 0.5s ease, background-color 0.3s ease;
-  border-radius: 6px;
-}
-
-.button-group {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 12px;
-  width: 100%;
-  margin-top: 20px;
-}
-
-.score-button {
-  padding: 16px 12px;
-  border: none;
-  border-radius: 10px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  background-color: #FF6B35;
   color: white;
+  padding: 1.25rem;
+  border-radius: 1rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  letter-spacing: 0.025em;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border: none;
+  cursor: pointer;
+}
+
+.truco-btn-primary:hover {
+  background-color: #FF8555;
+}
+
+.truco-btn-primary:active {
+  background-color: #E55A25;
+}
+
+.truco-btn-emoji {
+  font-size: 1.5rem;
+}
+
+.truco-btn-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.truco-btn-secondary {
+  flex: 1;
+  background-color: var(--truco-btn-secondary-bg);
+  color: var(--truco-text);
+  padding: 1rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  cursor: pointer;
+}
+
+.truco-btn-secondary:hover {
+  background-color: var(--truco-btn-secondary-hover);
+}
+
+.truco-btn-secondary:active {
+  background-color: var(--truco-btn-secondary-active);
+}
+
+.truco-btn-minus {
+  color: #ef4444;
+  font-size: 1.5rem;
+}
+
+.truco-btn-reset {
   width: 100%;
+  background-color: #18181b;
+  color: white;
+  padding: 1rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  cursor: pointer;
 }
 
-.add-button {
-  background-color: #6c5ce7;
+.truco-btn-reset:hover {
+  background-color: #27272a;
 }
 
-.add-button:hover {
-  background-color: #5f4fcf;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+.truco-btn-reset:active {
+  background-color: #3f3f46;
 }
 
-.subtract-button {
-  background-color: #ff6b6b;
+.truco-btn-reset svg {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
-.subtract-button:hover {
-  background-color: #ee5a52;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
-}
-
-.score-button:active {
-  transform: translateY(0);
-}
-
-/* Responsivo */
-@media (max-width: 768px) {
-  .truco-scoreboard {
-    padding: 16px;
-    gap: 16px;
-  }
-
-  .team-card {
-    padding: 20px;
-  }
-
-  .team-name {
-    font-size: 4rem;
-    padding: 1px 5px;
-  }
-
-  .team-name-input {
-    font-size: 1.5rem;
-    padding: 8px 16px;
-  }
-
-  .team-score {
-    font-size: 4rem;
-  }
-
-  .score-button {
-    padding: 14px 10px;
-    font-size: 1rem;
-  }
-
-  .button-group {
-    gap: 10px;
-  }
-
-  .truco-header {
-    padding: 12px 16px;
-  }
-
-  .truco-title {
-    font-size: 1.3rem;
-  }
-
-  .burger-button {
-    left: 16px;
-  }
-}
 
 @media (max-width: 480px) {
-  .team-card {
-    padding: 16px;
+  .truco-team-label {
+    font-size: 1.5rem;
+    letter-spacing: 0.08em;
   }
+}
 
-  .team-name {
-    font-size: 1.3rem;
-  }
-
-  .team-name-input {
-    font-size: 1.3rem;
-  }
-
-  .team-score {
-    font-size: 3.5rem;
-  }
-
-  .score-button {
-    padding: 12px 8px;
-    font-size: 0.9rem;
-  }
-
-  .button-group {
-    gap: 8px;
+@media (min-width: 768px) {
+  .truco-actions {
+    padding-bottom: 2rem;
   }
 }

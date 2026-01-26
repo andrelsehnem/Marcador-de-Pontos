@@ -1,0 +1,36 @@
+:root {
+  --footer-bg: #F8FAFC;
+  --footer-text: #666666;
+  --footer-border: #E0E0E0;
+}
+
+[data-theme="dark"] {
+  --footer-bg: #0F172A;
+  --footer-text: #94A3B8;
+  --footer-border: #334155;
+}
+
+.app-footer {
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+  border-top: 1px solid var(--footer-border);
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  margin-top: auto;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-content p {
+  margin: 0;
+}
+
+a {
+  color: #ff6600;
+  text-decoration: none; /* opcional */
+}

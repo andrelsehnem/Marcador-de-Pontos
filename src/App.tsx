@@ -5,6 +5,7 @@ import ListaJogos from './web/pages/ListaJogos/ListaJogos';
 import Landing from './web/pages/Landing/Landing';
 import Cacheta from './web/pages/Cacheta/Cacheta';
 import Truco from './web/pages/Truco/Truco';
+import Footer from './shared/components/Footer/Footer';
 import { Analytics } from "@vercel/analytics/react"
 
 export default function App() {
@@ -32,12 +33,15 @@ export default function App() {
   };
 
   return (
-    <div style={{ width: '100%', height: '100%', margin: 0, padding: 0 }}>
+    <div style={{ width: '100%', minHeight: '100vh', margin: 0, padding: 0, display: 'flex', flexDirection: 'column' }}>
       <ThemeProvider>
-        {currentPage === 'landing' && <Landing onNavigate={navigateTo} />}
-        {currentPage === 'listajogos' && <ListaJogos onNavigate={navigateTo} />}
-        {currentPage === 'truco' && <Truco onBack={() => navigateTo('listajogos')} />}
-        {currentPage === 'cacheta' && <Cacheta onBack={() => navigateTo('listajogos')} />}
+        <div style={{ flex: 1 }}>
+          {currentPage === 'landing' && <Landing onNavigate={navigateTo} />}
+          {currentPage === 'listajogos' && <ListaJogos onNavigate={navigateTo} />}
+          {currentPage === 'truco' && <Truco onBack={() => navigateTo('listajogos')} />}
+          {currentPage === 'cacheta' && <Cacheta onBack={() => navigateTo('listajogos')} />}
+        </div>
+        <Footer />
       </ThemeProvider>
       <Analytics />
     </div>

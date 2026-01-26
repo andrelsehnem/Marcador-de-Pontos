@@ -1,0 +1,6 @@
+guigit add .
+git commit -m "Descrição das alterações"
+git checkout main
+git pull
+git merge dev
+git push

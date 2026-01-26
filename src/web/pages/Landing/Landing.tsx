@@ -80,7 +80,7 @@ const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => 
               </button>
               <button 
                 className="game-button truco-btn"
-                onClick={() => onNavigate('listajogos')}
+                onClick={() => onNavigate('truco')}
               >
                 🎯 Truco
               </button>
