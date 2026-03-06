@@ -6,28 +6,64 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
+import { useTheme } from '../../shared/contexts/ThemeContext';
 
-const HomeScreen: React.FC = () => {
+interface HomeScreenProps {
+  onOpenTruco: () => void;
+}
+
+const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco }) => {
+  const { theme, toggleTheme, colors } = useTheme();
+  
+  const isDark = theme === 'dark';
+  const bgColor = isDark ? colors.background.dark : colors.background.light;
+  const textColor = isDark ? colors.text.dark : colors.text.light;
+  const subtitleColor = isDark ? colors.text.dark : colors.text.secondary;
+  const primaryColor = isDark ? colors.primary : colors.secondaryDark;
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}>
+      {/* Botão de Tema no topo */}
+      <TouchableOpacity 
+        style={[styles.themeButton, { 
+          backgroundColor: isDark ? colors.background.dark2 : colors.surface,
+          borderColor: primaryColor 
+        }]}
+        onPress={toggleTheme}
+        activeOpacity={0.7}
+      >
+        <Text style={styles.themeIcon}>{isDark ? '☀️' : '🌙'}</Text>
+      </TouchableOpacity>
+
       <View style={styles.content}>
-        <Text style={styles.title}>Marcador de baralho</Text>
-        <Text style={styles.subtitle}>
+        <Text style={[styles.title, { color: textColor }]}>Marcador de baralho</Text>
+        <Text style={[styles.subtitle, { color: subtitleColor }]}>
           Acompanhe suas mãos e jogadas com facilidade!
         </Text>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Novo Jogo</Text>
+          <TouchableOpacity style={[styles.button, { backgroundColor: primaryColor }]} onPress={onOpenTruco}>
+            <Text style={styles.buttonText}>Truco</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.button, styles.secondaryButton]}>
-            <Text style={styles.buttonTextSecondary}>Histórico</Text>
+          <TouchableOpacity style={[styles.button, styles.secondaryButton, { 
+            backgroundColor: bgColor,
+            borderColor: primaryColor 
+          }]}>
+            <Text style={[styles.buttonTextSecondary, { color: primaryColor }]}>Cacheta</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.button, styles.secondaryButton]}>
-            <Text style={styles.buttonTextSecondary}>Configurações</Text>
-          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.button, styles.secondaryButton, { 
+              backgroundColor: bgColor,
+              borderColor: primaryColor 
+            }]}
+            onPress={toggleTheme}
+          >
+            <Text style={[styles.buttonTextSecondary, { color: primaryColor }]}>
+              {isDark ? '☀️ Modo Claro' : '🌙 Modo Escuro'}
+            </Text>
+          </TouchableOpacity> 
         </View>
       </View>
     </SafeAreaView>
@@ -37,7 +73,26 @@ const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+  },
+  themeButton: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  themeIcon: {
+    fontSize: 24,
   },
   content: {
     flex: 1,
@@ -48,13 +103,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#1A1A1A',
     marginBottom: 10,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    color: '#666666',
     marginBottom: 40,
     textAlign: 'center',
   },
@@ -63,7 +116,6 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   button: {
-    backgroundColor: '#6C5CE7',
     paddingVertical: 16,
     paddingHorizontal: 20,
     borderRadius: 12,
@@ -75,9 +127,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   secondaryButton: {
-    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#6C5CE7',
   },
   buttonText: {
     color: '#FFFFFF',
@@ -85,7 +135,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   buttonTextSecondary: {
-    color: '#6C5CE7',
     fontSize: 16,
     fontWeight: '600',
   },
