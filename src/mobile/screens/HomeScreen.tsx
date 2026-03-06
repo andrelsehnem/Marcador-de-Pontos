@@ -10,9 +10,10 @@ import { useTheme } from '../../shared/contexts/ThemeContext';
 
 interface HomeScreenProps {
   onOpenTruco: () => void;
+  onOpenCacheta: () => void;
 }
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco }) => {
+const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco, onOpenCacheta }) => {
   const { theme, toggleTheme, colors } = useTheme();
   
   const isDark = theme === 'dark';
@@ -49,7 +50,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco }) => {
           <TouchableOpacity style={[styles.button, styles.secondaryButton, { 
             backgroundColor: bgColor,
             borderColor: primaryColor 
-          }]}>
+          }]} onPress={onOpenCacheta}>
             <Text style={[styles.buttonTextSecondary, { color: primaryColor }]}>Cacheta</Text>
           </TouchableOpacity>
 
