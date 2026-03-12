@@ -110,9 +110,9 @@ const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => 
 
         {/* Features */}
         <div className="features">
-          <h3 className="features-title">
+          <h2 className="features-title">
             ✨ Por que escolher nosso marcador?
-          </h3>
+          </h2>
           <div className="features-grid">
             <Feature icon="⚡" text="Rápido e Intuitivo" />
             <Feature icon="🎯" text="Múltiplos Jogos" />

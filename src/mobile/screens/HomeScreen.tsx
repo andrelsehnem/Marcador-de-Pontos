@@ -7,6 +7,8 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { useTheme } from '../../shared/contexts/ThemeContext';
+import { AdMobBanner } from '../../shared/components/AdMob/BannerAd';
+import { useInterstitialAd } from '../../shared/components/AdMob/useInterstitialAd';
 
 interface HomeScreenProps {
   onOpenTruco: () => void;
@@ -15,12 +17,23 @@ interface HomeScreenProps {
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco, onOpenCacheta }) => {
   const { theme, toggleTheme, colors } = useTheme();
+  const { showInterstitialAd } = useInterstitialAd();
   
   const isDark = theme === 'dark';
   const bgColor = isDark ? colors.background.dark : colors.background.light;
   const textColor = isDark ? colors.text.dark : colors.text.light;
   const subtitleColor = isDark ? colors.text.dark : colors.text.secondary;
   const primaryColor = isDark ? colors.primary : colors.secondaryDark;
+
+  const handleOpenTruco = async () => {
+    await showInterstitialAd();
+    onOpenTruco();
+  };
+
+  const handleOpenCacheta = async () => {
+    await showInterstitialAd();
+    onOpenCacheta();
+  };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}>
@@ -43,14 +56,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco, onOpenCacheta }) =
         </Text>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={[styles.button, { backgroundColor: primaryColor }]} onPress={onOpenTruco}>
+          <TouchableOpacity style={[styles.button, { backgroundColor: primaryColor }]} onPress={handleOpenTruco}>
             <Text style={styles.buttonText}>Truco</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.button, styles.secondaryButton, { 
             backgroundColor: bgColor,
             borderColor: primaryColor 
-          }]} onPress={onOpenCacheta}>
+          }]} onPress={handleOpenCacheta}>
             <Text style={[styles.buttonTextSecondary, { color: primaryColor }]}>Cacheta</Text>
           </TouchableOpacity>
 
@@ -66,6 +79,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco, onOpenCacheta }) =
             </Text>
           </TouchableOpacity> 
         </View>
+      </View>
+
+      {/* Anúncio AdMob Banner */}
+      <View style={styles.adContainer}>
+        <AdMobBanner />
       </View>
     </SafeAreaView>
   );
@@ -138,6 +156,12 @@ const styles = StyleSheet.create({
   buttonTextSecondary: {
     fontSize: 16,
     fontWeight: '600',
+  },
+  adContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 10,
   },
 });
 
