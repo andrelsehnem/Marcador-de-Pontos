@@ -16,7 +16,20 @@
       "package": "dev.andre100.marcadorPontos",
       "navigationBar": {
         "visible": "immersive"
-      }
-    }
+      },
+      "googleMobileAdsAppId": "ca-app-pub-7478664676745892~3869488742"
+    },
+    "ios": {
+      "googleMobileAdsAppId": "ca-app-pub-7478664676745892~3869488742"
+    },
+    "plugins": [
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-7478664676745892~3869488742",
+          "iosAppId": "ca-app-pub-7478664676745892~3869488742"
+        }
+      ]
+    ]
   }
 }

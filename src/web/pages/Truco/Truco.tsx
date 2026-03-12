@@ -77,6 +77,8 @@ export default function TrucoPaulista({ onBack }: { onBack: () => void }) {
 
     return (
         <div className="truco-container" data-theme={theme}>
+            <h1 className="sr-only">Marcador de Truco Paulista Online</h1>
+
             {/* Header */}
             <div className="truco-header">
                 <button className="truco-back-btn" onClick={() => window.history.back()}>

@@ -21,7 +21,7 @@ const ListaJogos: React.FC<{ onNavigate: (page: string) => void }> = ({ onNaviga
       <ThemeToggle />
       <div className="home-content">
         <h1 className="home-title" style={{ color: themeStyles.textPrimary }}>
-          Marcador de baralho
+          Marcador de Baralho Online
         </h1>
         <p className="home-subtitle" style={{ color: themeStyles.textSecondary }}>
           Acompanhe suas mãos e jogadas com facilidade!

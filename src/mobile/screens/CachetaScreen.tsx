@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../shared/contexts/ThemeContext';
+import { useInterstitialAd } from '../../shared/components/AdMob/useInterstitialAd';
 
 interface Player {
   id: number;
@@ -28,6 +29,7 @@ const STORAGE_KEY = 'cacheta-players-mobile';
 const CachetaScreen: React.FC<CachetaScreenProps> = ({ onBack }) => {
   const { theme, colors } = useTheme();
   const { width, height } = useWindowDimensions();
+  const { showInterstitialAd } = useInterstitialAd();
 
   const isDark = theme === 'dark';
   const isPortrait = height >= width;
@@ -120,6 +122,11 @@ const CachetaScreen: React.FC<CachetaScreenProps> = ({ onBack }) => {
     ]);
   };
 
+  const handleBack = async () => {
+    await showInterstitialAd();
+    onBack();
+  };
+
   return (
     <>
       <StatusBar
@@ -130,7 +137,7 @@ const CachetaScreen: React.FC<CachetaScreenProps> = ({ onBack }) => {
       <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}>
         <View style={[styles.content, { padding: containerPadding }]}>
           <View style={styles.header}>
-            <TouchableOpacity onPress={onBack} style={[styles.backButton, { borderColor: primaryColor }]}>
+            <TouchableOpacity onPress={handleBack} style={[styles.backButton, { borderColor: primaryColor }]}>
               <Text style={[styles.backText, { color: primaryColor }]}>Voltar</Text>
             </TouchableOpacity>
             <Text style={[styles.headerTitle, { color: textColor }]}>Cacheta</Text>
