@@ -82,6 +82,7 @@ export default function App() {
     upsertMetaTag('property', 'og:description', currentSeo.description);
     upsertMetaTag('property', 'og:type', 'website');
     upsertMetaTag('property', 'og:url', canonicalUrl);
+    upsertMetaTag('name', 'google-adsense-account', 'ca-pub-7478664676745892');
     upsertCanonical(canonicalUrl);
   }, [currentPage]);
 
