@@ -43,6 +43,24 @@ const upsertMetaTag = (attr: 'name' | 'property', key: string, value: string) =>
   tag.setAttribute('content', value);
 };
 
+const upsertScript = (src: string, options?: { async?: boolean; crossOrigin?: 'anonymous' | 'use-credentials' }) => {
+  let scriptTag = document.head.querySelector(`script[src="${src}"]`) as HTMLScriptElement | null;
+
+  if (!scriptTag) {
+    scriptTag = document.createElement('script');
+    scriptTag.src = src;
+    document.head.appendChild(scriptTag);
+  }
+
+  if (options?.async !== undefined) {
+    scriptTag.async = options.async;
+  }
+
+  if (options?.crossOrigin) {
+    scriptTag.crossOrigin = options.crossOrigin;
+  }
+};
+
 const upsertCanonical = (href: string) => {
   let canonicalTag = document.head.querySelector('link[rel="canonical"]');
   if (!canonicalTag) {
@@ -83,6 +101,10 @@ export default function App() {
     upsertMetaTag('property', 'og:type', 'website');
     upsertMetaTag('property', 'og:url', canonicalUrl);
     upsertMetaTag('name', 'google-adsense-account', 'ca-pub-7478664676745892');
+    upsertScript('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7478664676745892', {
+      async: true,
+      crossOrigin: 'anonymous',
+    });
     upsertCanonical(canonicalUrl);
   }, [currentPage]);
 
