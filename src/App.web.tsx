@@ -5,10 +5,12 @@ import ListaJogos from './web/pages/ListaJogos/ListaJogos';
 import Landing from './web/pages/Landing/Landing';
 import Cacheta from './web/pages/Cacheta/Cacheta';
 import Truco from './web/pages/Truco/Truco';
+import ComoJogarTruco from './web/pages/ComoJogarTruco/ComoJogarTruco';
+import ComoJogarCacheta from './web/pages/ComoJogarCacheta/ComoJogarCacheta';
 import Footer from './shared/components/Footer/Footer';
 import { Analytics } from '@vercel/analytics/react';
 
-type WebPage = 'landing' | 'listajogos' | 'truco' | 'cacheta';
+type WebPage = 'landing' | 'listajogos' | 'truco' | 'cacheta' | 'como-jogar-truco' | 'como-jogar-cacheta';
 
 const SEO_BY_PAGE: Record<WebPage, { title: string; description: string; path: string }> = {
   landing: {
@@ -25,6 +27,16 @@ const SEO_BY_PAGE: Record<WebPage, { title: string; description: string; path: s
     title: 'Marcador de Truco Online',
     description: 'Controle pontos do Truco com placar rápido, rodadas de 1, 3, 6 e 12 e salvamento local automático.',
     path: '/truco',
+  },
+  'como-jogar-truco': {
+    title: 'Como Jogar Truco | Guia Rápido para Iniciantes',
+    description: 'Aprenda as regras básicas do Truco Paulista: objetivo, pontuação, truco, seis, nove e doze.',
+    path: '/como-jogar-truco',
+  },
+  'como-jogar-cacheta': {
+    title: 'Como Jogar Cacheta | Regras e Estratégias',
+    description: 'Aprenda como jogar Cacheta com regras básicas, combinações e dicas práticas para iniciantes e intermediários.',
+    path: '/como-jogar-cacheta',
   },
   cacheta: {
     title: 'Marcador de Cacheta Online',
@@ -80,6 +92,8 @@ export default function App() {
       if (path === '/listajogos') setCurrentPage('listajogos');
       else if (path === '/cacheta') setCurrentPage('cacheta');
       else if (path === '/truco') setCurrentPage('truco');
+      else if (path === '/como-jogar-truco') setCurrentPage('como-jogar-truco');
+      else if (path === '/como-jogar-cacheta') setCurrentPage('como-jogar-cacheta');
       else setCurrentPage('landing');
     };
 
@@ -121,6 +135,18 @@ export default function App() {
           {currentPage === 'landing' && <Landing onNavigate={navigateTo} />}
           {currentPage === 'listajogos' && <ListaJogos onNavigate={navigateTo} />}
           {currentPage === 'truco' && <Truco onBack={() => navigateTo('listajogos')} />}
+          {currentPage === 'como-jogar-truco' && (
+            <ComoJogarTruco
+              onBack={() => navigateTo('listajogos')}
+              onPlayTruco={() => navigateTo('truco')}
+            />
+          )}
+          {currentPage === 'como-jogar-cacheta' && (
+            <ComoJogarCacheta
+              onBack={() => navigateTo('listajogos')}
+              onPlayCacheta={() => navigateTo('cacheta')}
+            />
+          )}
           {currentPage === 'cacheta' && <Cacheta onBack={() => navigateTo('listajogos')} />}
         </div>
         <Footer />

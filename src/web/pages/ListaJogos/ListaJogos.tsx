@@ -47,6 +47,26 @@ const ListaJogos: React.FC<{ onNavigate: (page: string) => void }> = ({ onNaviga
             borderColor={themeStyles.buttonSecondary.border}
             borderWidth={themeStyles.buttonSecondary.borderWidth}
           />
+
+          <Button
+            text="Como jogar truco"
+            backgroundColor={themeStyles.buttonSecondary.bg}
+            textColor={themeStyles.buttonSecondary.text}
+            onClick={() => onNavigate('como-jogar-truco')}
+            className="button-secondary"
+            borderColor={themeStyles.buttonSecondary.border}
+            borderWidth={themeStyles.buttonSecondary.borderWidth}
+          />
+
+          <Button
+            text="Como jogar cacheta"
+            backgroundColor={themeStyles.buttonSecondary.bg}
+            textColor={themeStyles.buttonSecondary.text}
+            onClick={() => onNavigate('como-jogar-cacheta')}
+            className="button-secondary"
+            borderColor={themeStyles.buttonSecondary.border}
+            borderWidth={themeStyles.buttonSecondary.borderWidth}
+          />
         </div>
       </div>
     </div>
