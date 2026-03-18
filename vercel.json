@@ -2,5 +2,64 @@
   "buildCommand": "npm run build:web",
   "outputDirectory": "dist",
   "devCommand": "expo start --web",
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.marcadordepontos.com.br"
+        }
+      ],
+      "destination": "https://marcadordepontos.com.br/:path*",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/listajogos",
+      "destination": "/listajogos/index.html"
+    },
+    {
+      "source": "/listajogos/",
+      "destination": "/listajogos/index.html"
+    },
+    {
+      "source": "/cacheta",
+      "destination": "/cacheta/index.html"
+    },
+    {
+      "source": "/cacheta/",
+      "destination": "/cacheta/index.html"
+    },
+    {
+      "source": "/truco",
+      "destination": "/truco/index.html"
+    },
+    {
+      "source": "/truco/",
+      "destination": "/truco/index.html"
+    },
+    {
+      "source": "/como-jogar-truco",
+      "destination": "/como-jogar-truco/index.html"
+    },
+    {
+      "source": "/como-jogar-truco/",
+      "destination": "/como-jogar-truco/index.html"
+    },
+    {
+      "source": "/como-jogar-cacheta",
+      "destination": "/como-jogar-cacheta/index.html"
+    },
+    {
+      "source": "/como-jogar-cacheta/",
+      "destination": "/como-jogar-cacheta/index.html"
+    },
+    {
+      "source": "/((?!.*\\..*).*)",
+      "destination": "/index.html"
+    }
+  ]
 }

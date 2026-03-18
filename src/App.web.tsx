@@ -12,6 +12,8 @@ import { Analytics } from '@vercel/analytics/react';
 
 type WebPage = 'landing' | 'listajogos' | 'truco' | 'cacheta' | 'como-jogar-truco' | 'como-jogar-cacheta';
 
+const CANONICAL_SITE_URL = 'https://marcadordepontos.com.br';
+
 const SEO_BY_PAGE: Record<WebPage, { title: string; description: string; path: string }> = {
   landing: {
     title: 'Marcador de Baralho: Truco e Cacheta Online',
@@ -88,7 +90,7 @@ export default function App() {
 
   useEffect(() => {
     const handleRouteChange = () => {
-      const path = window.location.pathname;
+      const path = window.location.pathname.replace(/\/$/, '') || '/';
       if (path === '/listajogos') setCurrentPage('listajogos');
       else if (path === '/cacheta') setCurrentPage('cacheta');
       else if (path === '/truco') setCurrentPage('truco');
@@ -104,7 +106,7 @@ export default function App() {
 
   useEffect(() => {
     const currentSeo = SEO_BY_PAGE[currentPage];
-    const siteUrl = window.location.origin;
+    const siteUrl = CANONICAL_SITE_URL;
     const canonicalUrl = `${siteUrl}${currentSeo.path}`;
 
     document.title = currentSeo.title;
