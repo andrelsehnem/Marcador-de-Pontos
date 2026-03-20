@@ -52,20 +52,13 @@ export const initializeAdMob = async () => {
   }
 };
 
-/**
- * IDs de teste para desenvolvimento
- * Substitua pelos seus IDs reais de produção
- */
 export const AD_IDS = {
-  // Banner IDs de teste
-  BANNER_ANDROID: 'ca-app-pub-7478664676745892/4665560047',
-  BANNER_IOS: 'ca-app-pub-7478664676745892/2934735716',
-  
-  // Interstitial IDs de teste
-  INTERSTITIAL_ANDROID: 'ca-app-pub-7478664676745892/1033173712',
-  INTERSTITIAL_IOS: 'ca-app-pub-7478664676745892/4411468910',
-  
-  // Rewarded IDs de teste
-  REWARDED_ANDROID: 'ca-app-pub-7478664676745892/5224354917',
-  REWARDED_IOS: 'ca-app-pub-7478664676745892/1712485313',
+  APP: 'ca-app-pub-7478664676745892~3869488742',
+  INTERSTITIAL: {
+    android: 'ca-app-pub-7478664676745892/4665560047',
+    ios: 'ca-app-pub-7478664676745892/4665560047',
+  },
 };
+
+export const getInterstitialAdUnitId = () =>
+  Platform.select(AD_IDS.INTERSTITIAL) ?? AD_IDS.INTERSTITIAL.android;

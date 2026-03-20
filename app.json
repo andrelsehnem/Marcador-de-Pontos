@@ -2,7 +2,7 @@
   "expo": {
     "name": "Marcador de Baralho",
     "slug": "marcador-de-baralho",
-    "version": "2.0.4",
+    "version": "2.0.5",
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -30,6 +30,11 @@
           "iosAppId": "ca-app-pub-7478664676745892~3869488742"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "c7c0c4cd-650e-4e97-8656-c462dce3c3d1"
+      }
+    }
   }
 }

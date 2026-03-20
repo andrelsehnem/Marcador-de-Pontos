@@ -1,0 +1,15 @@
+# Evita enviar artefatos locais gerados para o EAS Build
+android/.gradle/
+android/.kotlin/
+android/build/
+android/app/build/
+android/app/.cxx/
+
+# Dependências locais (instaladas no servidor de build)
+node_modules/
+
+# Arquivos locais/sensíveis
+marcador.keystore
+android/upload-keystore.jks
+android/gradle.properties
+build android.txt

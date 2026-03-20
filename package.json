@@ -1,13 +1,14 @@
 {
   "name": "marcador-de-baralho",
-  "version": "2.0.0",
+  "version": "2.0.5",
   "description": "Acompanhe suas mãos e jogadas",
   "scripts": {
     "start": "expo start",
     "web": "expo start --web",
     "build:web": "expo export -p web && node scripts/sync-head.js && node scripts/inject-adsense.js && node scripts/generate-seo-files.js",
     "android": "expo run:android",
-    "ios": "expo run:ios"
+    "ios": "expo run:ios",
+    "build:android:store": "cd android && gradlew.bat bundleRelease"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
@@ -15,6 +16,7 @@
     "@vercel/analytics": "^1.6.1",
     "expo": "~54.0.33",
     "expo-constants": "~18.0.13",
+    "expo-dev-client": "~6.0.20",
     "expo-linking": "~8.0.11",
     "expo-navigation-bar": "~5.0.10",
     "expo-router": "~6.0.23",

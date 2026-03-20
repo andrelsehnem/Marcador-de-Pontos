@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
+import { getInterstitialAdUnitId } from '../../services/admob';
 
 let hasWarnedMissingAdMob = false;
 
@@ -43,51 +44,86 @@ export const useInterstitialAd = (
   unitId?: string
 ) => {
   const interstitialRef = useRef<any | null>(null);
+  const unsubscribeListenersRef = useRef<Array<() => void>>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
   const adsModule = getGoogleMobileAdsModule();
 
   const resolvedUnitId =
     unitId ||
-    Platform.select({
-      android: 'ca-app-pub-7478664676745892/4665560047',
-      ios: 'ca-app-pub-7478664676745892/4665560047',
-    }) ||
+    getInterstitialAdUnitId() ||
     adsModule?.TestIds?.INTERSTITIAL ||
     'ca-app-pub-3940256099942544/1033173712';
 
-  const loadInterstitialAd = async () => {
+  const cleanupListeners = useCallback(() => {
+    unsubscribeListenersRef.current.forEach((unsubscribe) => unsubscribe());
+    unsubscribeListenersRef.current = [];
+  }, []);
+
+  const loadInterstitialAd = useCallback(() => {
     try {
       if (!adsModule) {
         return;
       }
 
-      const ad = adsModule.InterstitialAd.createForAdRequest(resolvedUnitId);
+      cleanupListeners();
+      setIsLoaded(false);
+
+      const { AdEventType, InterstitialAd } = adsModule;
+      const ad = InterstitialAd.createForAdRequest(resolvedUnitId, {
+        requestNonPersonalizedAdsOnly: false,
+        keywords: ['jogo', 'baralho', 'truco', 'cacheta'],
+      });
+
+      unsubscribeListenersRef.current = [
+        ad.addAdEventListener(AdEventType.LOADED, () => {
+          setIsLoaded(true);
+        }),
+        ad.addAdEventListener(AdEventType.CLOSED, () => {
+          setIsLoaded(false);
+          loadInterstitialAd();
+        }),
+        ad.addAdEventListener(AdEventType.ERROR, (error: unknown) => {
+          setIsLoaded(false);
+          console.log('Erro no ciclo do Interstitial Ad:', error);
+        }),
+      ];
+
       interstitialRef.current = ad;
-      await ad.load();
+      ad.load();
     } catch (error) {
+      setIsLoaded(false);
       console.log('Erro ao carregar Interstitial Ad:', error);
     }
-  };
+  }, [adsModule, cleanupListeners, resolvedUnitId]);
 
-  const showInterstitialAd = async () => {
+  const showInterstitialAd = useCallback(async () => {
     try {
-      if (interstitialRef.current) {
+      if (interstitialRef.current && isLoaded) {
         await interstitialRef.current.show();
-        // Precarregar próximo anúncio após fechar
-        loadInterstitialAd();
+        return true;
       }
+
+      return false;
     } catch (error) {
+      setIsLoaded(false);
       console.log('Erro ao mostrar Interstitial Ad:', error);
+      return false;
     }
-  };
+  }, [isLoaded]);
 
   useEffect(() => {
-    // Precarregar anúncio quando o hook é montado
     if (adsModule) {
       loadInterstitialAd();
     }
-  }, [resolvedUnitId]);
+
+    return () => {
+      cleanupListeners();
+      interstitialRef.current = null;
+    };
+  }, [adsModule, cleanupListeners, loadInterstitialAd]);
 
   return {
+    isLoaded,
     showInterstitialAd,
     loadInterstitialAd,
   };

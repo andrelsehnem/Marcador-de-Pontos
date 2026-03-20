@@ -7,7 +7,6 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { useTheme } from '../../shared/contexts/ThemeContext';
-import { AdMobBanner } from '../../shared/components/AdMob/BannerAd';
 import { useInterstitialAd } from '../../shared/components/AdMob/useInterstitialAd';
 
 interface HomeScreenProps {
@@ -80,11 +79,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco, onOpenCacheta }) =
           </TouchableOpacity> 
         </View>
       </View>
-
-      {/* Anúncio AdMob Banner */}
-      <View style={styles.adContainer}>
-        <AdMobBanner />
-      </View>
     </SafeAreaView>
   );
 };
@@ -156,12 +150,6 @@ const styles = StyleSheet.create({
   buttonTextSecondary: {
     fontSize: 16,
     fontWeight: '600',
-  },
-  adContainer: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 10,
   },
 });
 

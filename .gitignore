@@ -1,5 +1,29 @@
 node_modules
 node_modules/
+node_modules/.bin/
 marcador.keystore
 android/upload-keystore.jks
 android/gradle.properties
+build android.txt
+android/.gradle/
+android/.kotlin/
+android/build/
+android/app/build/
+android/app/.cxx/
+# OSX
+#
+.DS_Store
+
+# Android/IntelliJ
+#
+build/
+.idea
+.gradle
+local.properties
+*.iml
+*.hprof
+.cxx/
+
+# Bundle artifacts
+*.jsbundle
+
