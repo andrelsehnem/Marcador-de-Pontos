@@ -2,7 +2,8 @@
   "expo": {
     "name": "Marcador de Baralho",
     "slug": "marcador-de-baralho",
-    "version": "2.0.5",
+    "version": "2.0.6",
+    "icon": "./assets/icons/playstore.png",
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -10,10 +11,15 @@
       "myapp"
     ],
     "web": {
-      "bundler": "metro"
+      "bundler": "metro",
+      "favicon": "./assets/icons/playstore.png"
     },
     "android": {
       "package": "dev.andre100.marcadorPontos",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icons/playstore.png",
+        "backgroundColor": "#FFFFFF"
+      },
       "navigationBar": {
         "visible": "immersive"
       },
@@ -31,6 +37,10 @@
         }
       ]
     ],
+    "react-native-google-mobile-ads": {
+      "android_app_id": "ca-app-pub-7478664676745892~3869488742",
+      "ios_app_id": "ca-app-pub-7478664676745892~3869488742"
+    },
     "extra": {
       "eas": {
         "projectId": "c7c0c4cd-650e-4e97-8656-c462dce3c3d1"
