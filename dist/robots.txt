@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://marcadordepontos.com.br/sitemap.xml

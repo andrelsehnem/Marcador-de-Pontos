@@ -1,6 +1,7 @@
 node_modules
 node_modules/
 node_modules/.bin/
+dist/
 marcador.keystore
 android/upload-keystore.jks
 android/gradle.properties
