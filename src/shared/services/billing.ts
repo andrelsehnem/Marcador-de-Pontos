@@ -1,66 +1,64 @@
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-let hasWarnedMissingBilling = false;
-
-const isBillingSupportedRuntime = () => {
-  if (Platform.OS !== 'android') {
-    return false;
-  }
-
-  if (Constants.appOwnership === 'expo') {
-    return false;
-  }
-
-  return true;
-};
-
-const getBillingModule = () => {
-  if (!isBillingSupportedRuntime()) {
-    if (!hasWarnedMissingBilling) {
-      console.log('Billing desativado neste runtime (Expo Go/não Android).');
-      hasWarnedMissingBilling = true;
-    }
-    return null;
-  }
-
-  try {
-    return require('react-native-google-mobile-ads').BillingManager;
-  } catch {
-    if (!hasWarnedMissingBilling) {
-      console.log('Billing indisponível no binário atual.');
-      hasWarnedMissingBilling = true;
-    }
-    return null;
-  }
-};
+import * as RNIap from 'react-native-iap';
 
 // ID do produto único criado no Play Console
-export const PRODUCT_ID = 'no_ads_marcador_pontos_1'; // Substitua pelo ID real do seu produto no Play Console
+export const PRODUCT_ID = 'no_ads_marcador_pontos_1';
 
 const PURCHASE_STORAGE_KEY = 'app-purchase-remove-ads';
 
+export const isBillingSupportedRuntime = () => {
+  if (Platform.OS !== 'android') return false;
+  if (Constants.appOwnership === 'expo') return false;
+  return true;
+};
+
 /**
- * Verifica se o usuário já comprou o produto de remover anúncios
+ * Inicializa a conexão com o Play Billing
+ */
+export const initializeBilling = async () => {
+  try {
+    if (!isBillingSupportedRuntime()) return;
+    await RNIap.initConnection();
+    console.log('Billing inicializado com sucesso');
+  } catch (error) {
+    console.log('Erro ao inicializar Billing:', error);
+  }
+};
+
+/**
+ * Encerra a conexão com o Play Billing
+ */
+export const endBilling = async () => {
+  try {
+    if (!isBillingSupportedRuntime()) return;
+    await RNIap.endConnection();
+  } catch (error) {
+    console.log('Erro ao encerrar Billing:', error);
+  }
+};
+
+/**
+ * Verifica se o usuário já comprou o produto.
+ * Consulta o cache local e, se o runtime suportar, consulta também as compras disponíveis na Play Store.
  */
 export const checkPurchaseStatus = async (): Promise<boolean> => {
   try {
-    // Primeiro, tenta carregar do AsyncStorage (pode estar cacheado)
-    const cachedPurchase = await AsyncStorage.getItem(PURCHASE_STORAGE_KEY);
-    if (cachedPurchase === 'true') {
-      console.log('Compra de remover anúncios confirmada (cache)');
-      return true;
+    const cached = await AsyncStorage.getItem(PURCHASE_STORAGE_KEY);
+    if (cached === 'true') return true;
+
+    if (!isBillingSupportedRuntime()) return false;
+
+    await RNIap.initConnection();
+    const purchases = await RNIap.getAvailablePurchases();
+    const hasPurchased = purchases.some(p => p.productId === PRODUCT_ID);
+
+    if (hasPurchased) {
+      await AsyncStorage.setItem(PURCHASE_STORAGE_KEY, 'true');
     }
 
-    // Se em runtime suportado, verifica na Play Billing
-    if (!isBillingSupportedRuntime()) {
-      return false;
-    }
-
-    // Nota: A integração real com Play Billing Library requer setup adicional
-    // Por enquanto, retornamos o status cacheado
-    return cachedPurchase === 'true';
+    return hasPurchased;
   } catch (error) {
     console.log('Erro ao verificar status de compra:', error);
     return false;
@@ -68,7 +66,7 @@ export const checkPurchaseStatus = async (): Promise<boolean> => {
 };
 
 /**
- * Marca a compra como realizada (chamado após compra bem-sucedida)
+ * Persiste o status de compra localmente
  */
 export const setPurchaseStatus = async (purchased: boolean) => {
   try {
@@ -80,16 +78,18 @@ export const setPurchaseStatus = async (purchased: boolean) => {
 };
 
 /**
- * Inicializa o módulo de Billing
+ * Consulta os detalhes do produto na Play Store
  */
-export const initializeBilling = async () => {
+export const getProductDetails = async (): Promise<RNIap.ProductAndroid | null> => {
   try {
-    if (!isBillingSupportedRuntime()) {
-      return;
+    const products = await RNIap.fetchProducts({ skus: [PRODUCT_ID] });
+    const product = products[0];
+    if (product && product.type === 'in-app') {
+      return product as RNIap.ProductAndroid;
     }
-
-    console.log('Billing inicializado com sucesso');
+    return null;
   } catch (error) {
-    console.log('Erro ao inicializar Billing:', error);
+    console.log('Erro ao obter detalhes do produto:', error);
+    return null;
   }
 };

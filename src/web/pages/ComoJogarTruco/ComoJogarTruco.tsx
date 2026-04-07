@@ -3,7 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import './ComoJogarTruco.css';
 import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
 import { useThemeStyles } from '../../../shared/hooks/useThemeStyles';
-import AdSense from '../../../shared/components/AdSense/AdSense';
+
 
 interface ComoJogarTrucoProps {
   onBack: () => void;
@@ -48,8 +48,6 @@ const ComoJogarTruco: React.FC<ComoJogarTrucoProps> = ({ onBack, onPlayTruco }) 
             <li><strong>Fechamento prático:</strong> passo a passo direto para começar a jogar hoje.</li>
           </ul>
         </section>
-
-        <AdSense />
 
         <section className="como-jogar-truco-level" aria-label="Bloco para iniciantes">
           <h2 className="como-jogar-truco-level-title">Para iniciantes</h2>

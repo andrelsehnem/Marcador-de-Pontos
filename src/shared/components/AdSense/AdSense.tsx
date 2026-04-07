@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ADSENSE_CONFIG } from '../../constants/adsense';
 
 interface AdSenseProps {
@@ -20,21 +20,9 @@ const AdSense: React.FC<AdSenseProps> = ({
   responsive = true,
   style = { display: 'block', marginTop: '20px', marginBottom: '20px' }
 }) => {
-  useEffect(() => {
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (err) {
-      console.error('AdSense error:', err);
-    }
-  }, []);
-
-  // Se não tiver slot, usa auto ads (apenas script no head é suficiente)
+  // Se não tiver slot, o Auto Ads do Google será gerenciado automaticamente pelo script no head
   if (!slot) {
-    return (
-      <div style={style}>
-        {/* Auto Ads - o script no head gerencia automaticamente */}
-      </div>
-    );
+    return null; // Não renderizar nada - Auto Ads funciona sem componentes específicos
   }
 
   return (
