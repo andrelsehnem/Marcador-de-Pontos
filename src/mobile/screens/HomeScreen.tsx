@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../shared/contexts/ThemeContext';
 import { useInterstitialAd } from '../../shared/components/AdMob/useInterstitialAd';
+import { RemoveAdsPurchaseButton } from '../../shared/components/RemoveAdsPurchaseButton';
 
 interface HomeScreenProps {
   onOpenTruco: () => void;
@@ -76,7 +77,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco, onOpenCacheta }) =
             <Text style={[styles.buttonTextSecondary, { color: primaryColor }]}>
               {isDark ? '☀️ Modo Claro' : '🌙 Modo Escuro'}
             </Text>
-          </TouchableOpacity> 
+          </TouchableOpacity>
+
+          <RemoveAdsPurchaseButton style={styles.purchaseButton} />
         </View>
       </View>
     </SafeAreaView>
@@ -138,6 +141,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  purchaseButton: {
+    borderRadius: 12,
+    paddingVertical: 16,
   },
   secondaryButton: {
     borderWidth: 1,

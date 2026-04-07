@@ -3,10 +3,11 @@ import { RotateCcw, Menu, Clock, ArrowLeft } from 'lucide-react';
 import './Truco.css';
 import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
 import { useTheme } from '../../../shared/contexts/ThemeContext';
-import AdSense from '../../../shared/components/AdSense/AdSense';
+
 
 export default function TrucoPaulista({ onBack }: { onBack: () => void }) {
     const { theme } = useTheme();
+    const [expandContent, setExpandContent] = useState(false);
     const [nosScore, setNosScore] = useState(() => {
         const saved = localStorage.getItem('truco-nosScore');
         return saved ? parseInt(saved) : 0;
@@ -88,9 +89,6 @@ export default function TrucoPaulista({ onBack }: { onBack: () => void }) {
             </div>
 
             <ThemeToggle />
-
-            {/* AdSense */}
-            <AdSense />
 
             {/* Score Cards */}
             <div className="truco-score-section">
@@ -193,6 +191,82 @@ export default function TrucoPaulista({ onBack }: { onBack: () => void }) {
                     Reiniciar Rodada
                 </button>
             </div>
+
+            {/* Botão para expandir conteúdo educacional */}
+            <button
+              onClick={() => setExpandContent(!expandContent)}
+              style={{
+                margin: '30px 20px 20px 20px',
+                padding: '10px 20px',
+                backgroundColor: theme === 'dark' ? '#444' : '#ddd',
+                color: theme === 'dark' ? '#fff' : '#000',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '0.95em',
+                fontWeight: '500',
+                transition: 'all 0.3s ease',
+                width: 'calc(100% - 40px)',
+                maxWidth: '800px'
+              }}
+            >
+              {expandContent ? '▼ Ocultar Informações' : '► Sobre o Truco'}
+            </button>
+
+            {/* Conteúdo educacional recolhível */}
+            {expandContent && (
+              <div style={{ 
+                maxWidth: '800px',
+                margin: '0 auto',
+                padding: '20px',
+                marginBottom: '30px',
+                fontSize: '0.95em',
+                lineHeight: '1.6',
+                color: theme === 'dark' ? '#e0e0e0' : '#333',
+                opacity: expandContent ? 1 : 0,
+                transition: 'opacity 0.3s'
+              }}>
+                <h2 style={{ 
+                  color: theme === 'dark' ? '#fff' : '#000',
+                  marginBottom: '15px',
+                  fontSize: '1.3em'
+                }}>
+                  📊 Marcador de Truco Online
+                </h2>
+                <p style={{ marginBottom: '15px' }}>
+                  Use este marcador de <strong>Truco Paulista</strong> para controlar a pontuação em suas partidas. O Truco é o jogo de cartas mais popular do Brasil e combina estratégia, blefe e adrenalina. A primeira dupla a atingir <strong>12 pontos</strong> vence a rodada.
+                </p>
+
+                <h3 style={{ 
+                  color: theme === 'dark' ? '#fff' : '#000',
+                  marginBottom: '10px',
+                  fontSize: '1.1em'
+                }}>
+                  Como usar este marcador:
+                </h3>
+                <ul style={{ marginBottom: '20px', paddingLeft: '20px' }}>
+                  <li style={{ marginBottom: '8px' }}>Clique nos cartões para adicionar pontos direto</li>
+                  <li style={{ marginBottom: '8px' }}>Use os botões para selecionar o valor: 1 ponto, Truco (3), Seis (6), Nove (9) ou Doze (12)</li>
+                  <li style={{ marginBottom: '8px' }}>Corrija com os botões "-1 Ponto" se necessário</li>
+                  <li>Reinicie a rodada ou partida completa com um clique</li>
+                </ul>
+
+                <h3 style={{ 
+                  color: theme === 'dark' ? '#fff' : '#000',
+                  marginBottom: '10px',
+                  fontSize: '1.1em'
+                }}>
+                  Pontuação:
+                </h3>
+                <ul style={{ marginBottom: '20px', paddingLeft: '20px' }}>
+                  <li style={{ marginBottom: '8px' }}><strong>1 Ponto:</strong> Mão comum, ninguém fez truco</li>
+                  <li style={{ marginBottom: '8px' }}><strong>Truco (3 pontos):</strong> Alguém aumentou apostando "Truco"</li>
+                  <li style={{ marginBottom: '8px' }}><strong>Seis (6 pontos):</strong> Resposta com "Seis" após o Truco</li>
+                  <li style={{ marginBottom: '8px' }}><strong>Nove (9 pontos):</strong> Resposta com "Nove" após o Seis</li>
+                  <li><strong>Doze (12 pontos):</strong> O máximo da rodada, pedido com "Doze"</li>
+                </ul>
+              </div>
+            )}
         </div>
     );
 }

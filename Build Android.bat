@@ -33,4 +33,13 @@ if errorlevel 1 (
 
 echo.
 echo Build concluido com sucesso.
+
+set "AAB_DIR=%~dp0android\app\build\outputs\bundle\release"
+if exist "%AAB_DIR%" (
+  echo Abrindo pasta do AAB: %AAB_DIR%
+  start "" "%AAB_DIR%"
+) else (
+  echo Pasta do AAB nao encontrada: %AAB_DIR%
+)
+
 endlocal

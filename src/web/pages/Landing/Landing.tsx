@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Landing.css';
 import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
-import AdSense from '../../../shared/components/AdSense/AdSense';
+
 
 const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => {
   const [stars, setStars] = useState([]);
@@ -40,10 +40,10 @@ const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => 
             🎴
           </div>
           <h1 className="title">
-            Marcador de Baralho
+            Marcador de Pontos
           </h1>
           <p className="subtitle">
-            Marcar suas pontuações em jogos de baralho nunca foi tão fácil e divertido!
+            Marcar suas pontuações em jogos nunca foi tão fácil e divertido!
           </p>
 
           {/* Cards Display */}
@@ -104,9 +104,6 @@ const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => 
             onClick={() => window.open('https://play.google.com/store/apps/details?id=dev.andre100.marcadorPontos', '_blank')}
           />
         </div>
-
-        {/* AdSense */}
-        <AdSense />
 
         {/* Features */}
         <div className="features">

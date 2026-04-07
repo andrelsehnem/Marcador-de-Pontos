@@ -16,7 +16,7 @@ const CANONICAL_SITE_URL = 'https://marcadordepontos.com.br';
 
 const SEO_BY_PAGE: Record<WebPage, { title: string; description: string; path: string }> = {
   landing: {
-    title: 'Marcador de Baralho: Truco e Cacheta Online',
+    title: 'Marcador de Pontos: Truco e Cacheta Online',
     description: 'Marque pontos de Truco e Cacheta online, grátis e rápido. Salve partidas e jogue no celular sem instalar nada.',
     path: '/',
   },
@@ -117,10 +117,7 @@ export default function App() {
     upsertMetaTag('property', 'og:type', 'website');
     upsertMetaTag('property', 'og:url', canonicalUrl);
     upsertMetaTag('name', 'google-adsense-account', 'ca-pub-7478664676745892');
-    upsertScript('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7478664676745892', {
-      async: true,
-      crossOrigin: 'anonymous',
-    });
+    // Script já está no index.html, não precisa reinjetar aqui
     upsertCanonical(canonicalUrl);
   }, [currentPage]);
 

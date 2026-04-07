@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from './shared/contexts/ThemeContext';
+import { PurchaseProvider } from './shared/contexts/PurchaseContext';
 import HomeScreen from './mobile/screens/HomeScreen';
 import TrucoScreen from './mobile/screens/TrucoScreen';
 import CachetaScreen from './mobile/screens/CachetaScreen';
@@ -15,14 +16,16 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      {currentPage === 'home' && (
-        <HomeScreen 
-          onOpenTruco={() => setCurrentPage('truco')}
-          onOpenCacheta={() => setCurrentPage('cacheta')}
-        />
-      )}
-      {currentPage === 'truco' && <TrucoScreen onBack={() => setCurrentPage('home')} />}
-      {currentPage === 'cacheta' && <CachetaScreen onBack={() => setCurrentPage('home')} />}
+      <PurchaseProvider>
+        {currentPage === 'home' && (
+          <HomeScreen 
+            onOpenTruco={() => setCurrentPage('truco')}
+            onOpenCacheta={() => setCurrentPage('cacheta')}
+          />
+        )}
+        {currentPage === 'truco' && <TrucoScreen onBack={() => setCurrentPage('home')} />}
+        {currentPage === 'cacheta' && <CachetaScreen onBack={() => setCurrentPage('home')} />}
+      </PurchaseProvider>
     </ThemeProvider>
   );
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import Constants from 'expo-constants';
 import { View, Platform } from 'react-native';
+import { usePurchase } from '../../contexts/PurchaseContext';
 
 let hasWarnedMissingAdMob = false;
 
@@ -44,7 +45,13 @@ export const AdMobBanner: React.FC<BannerAdProps> = ({
   unitId,
   size,
 }) => {
+  const { isPurchased } = usePurchase();
   const adsModule = getGoogleMobileAdsModule();
+
+  // Não renderiza anúncio se o usuário comprou o produto de remover anúncios
+  if (isPurchased) {
+    return null;
+  }
 
   if (!adsModule) {
     return null;

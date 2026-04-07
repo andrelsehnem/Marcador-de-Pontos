@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Cacheta.css';
 import { useThemeStyles } from '../../../shared/hooks/useThemeStyles';
 import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
-import AdSense from '../../../shared/components/AdSense/AdSense';
+
 
 interface Player {
     id: number;
@@ -12,6 +12,7 @@ interface Player {
 
 const Cacheta: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     const themeStyles = useThemeStyles();
+    const [expandContent, setExpandContent] = useState(false);
     const [players, setPlayers] = useState<Player[]>([
         { id: 1, name: 'Jogador 1', score: 0 },
         { id: 2, name: 'Jogador 2', score: 0 },
@@ -187,9 +188,6 @@ const Cacheta: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 </h1>
             </div>
 
-            {/* AdSense */}
-            <AdSense />
-
             <div className="cacheta-scoreboard">
                 {players.map(player => (
                     <div
@@ -280,6 +278,93 @@ const Cacheta: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                     + Adicionar Jogador
                 </button>
             </div>
+
+            {/* Botão para expandir conteúdo educacional */}
+            <button
+              onClick={() => setExpandContent(!expandContent)}
+              style={{
+                margin: '30px 20px 20px 20px',
+                padding: '10px 20px',
+                backgroundColor: themeStyles.buttonSecondary.bg,
+                color: themeStyles.buttonSecondary.text,
+                border: `1px solid ${themeStyles.buttonSecondary.border}`,
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '0.95em',
+                fontWeight: '500',
+                transition: 'all 0.3s ease',
+                width: '200px',
+                maxWidth: '800px'
+              }}
+            >
+              {expandContent ? '▼ Ocultar Informações' : '► Sobre a Cacheta'}
+            </button>
+
+            {/* Conteúdo educacional recolhível */}
+            {expandContent && (
+              <div style={{ 
+                maxWidth: '800px',
+                margin: '0 auto',
+                padding: '20px',
+                marginBottom: '30px',
+                fontSize: '0.95em',
+                lineHeight: '1.6',
+                color: themeStyles.textPrimary,
+                opacity: expandContent ? 1 : 0,
+                transition: 'opacity 0.3s'
+              }}>
+                <h2 style={{ 
+                  color: themeStyles.textPrimary,
+                  marginBottom: '15px',
+                  fontSize: '1.3em'
+                }}>
+                  🃏 Marcador de Cacheta Online
+                </h2>
+                <p style={{ marginBottom: '15px' }}>
+                  Bem-vindo ao melhor marcador de <strong>Cacheta</strong>! Este é um jogo de estratégia e combinação de cartas muito popular no Brasil, particularmente entre amigos e famílias. Organize suas mãos em trincas (cartas do mesmo valor) ou sequências do mesmo naipe para bater antes dos adversários.
+                </p>
+
+                <h3 style={{ 
+                  color: themeStyles.textPrimary,
+                  marginBottom: '10px',
+                  fontSize: '1.1em'
+                }}>
+                  Como usar este marcador:
+                </h3>
+                <ul style={{ marginBottom: '20px', paddingLeft: '20px' }}>
+                  <li style={{ marginBottom: '8px' }}>Adicione todos os jogadores da mesa clicando em "+ Adicionar Jogador"</li>
+                  <li style={{ marginBottom: '8px' }}>Clique nos nomes para personalizar o nome de cada jogador</li>
+                  <li style={{ marginBottom: '8px' }}>Use os botões +1 e +2 para aumentar a pontuação (ou -1 e -2 para corrigir)</li>
+                  <li style={{ marginBottom: '8px' }}>Suporta de 2 a 6 jogadores dependendo de sua mesa</li>
+                  <li>Use o menu para zerar placar ou reiniciar a partida completa</li>
+                </ul>
+
+                <h3 style={{ 
+                  color: themeStyles.textPrimary,
+                  marginBottom: '10px',
+                  fontSize: '1.1em'
+                }}>
+                  Objetivo do Jogo:
+                </h3>
+                <p style={{ marginBottom: '20px' }}>
+                  Na Cacheta, o objetivo é ser o primeiro a organizar sua mão em <strong>combinações válidas</strong> (trincas ou sequências) e bater. Cada jogador compra e descarta cartas estrategicamente para montar suas combinações. Quem entender melhor a lógica das cartas e planejar seus movimentos com antecedência tende a vencer mais rodadas.
+                </p>
+
+                <h3 style={{ 
+                  color: themeStyles.textPrimary,
+                  marginBottom: '10px',
+                  fontSize: '1.1em'
+                }}>
+                  Dicas para novos jogadores:
+                </h3>
+                <ul style={{ marginBottom: '20px', paddingLeft: '20px' }}>
+                  <li style={{ marginBottom: '8px' }}><strong>Observe o descarte:</strong> As cartas que seus adversários descartam revelam informações preciosas</li>
+                  <li style={{ marginBottom: '8px' }}><strong>Planeje sequências:</strong> Sempre tente conectar cartas do mesmo naipe para facilitar compras</li>
+                  <li style={{ marginBottom: '8px' }}><strong>Gestão de risco:</strong> Nem sempre vale a pena comprar do lixo; às vezes é melhor descartar algo seguro</li>
+                  <li><strong>Bata na hora certa:</strong> Ter 2-3 combinações já é o suficiente para bater em muitas mesas</li>
+                </ul>
+              </div>
+            )}
         </div>
     );
 };

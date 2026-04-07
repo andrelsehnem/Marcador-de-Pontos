@@ -3,7 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import './ComoJogarCacheta.css';
 import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
 import { useThemeStyles } from '../../../shared/hooks/useThemeStyles';
-import AdSense from '../../../shared/components/AdSense/AdSense';
+
 
 interface ComoJogarCachetaProps {
   onBack: () => void;
@@ -48,8 +48,6 @@ const ComoJogarCacheta: React.FC<ComoJogarCachetaProps> = ({ onBack, onPlayCache
             <li><strong>Aplicação prática:</strong> checklist simples para sua próxima partida.</li>
           </ul>
         </section>
-
-        <AdSense />
 
         <section className="como-jogar-cacheta-level" aria-label="Bloco para iniciantes">
           <h2 className="como-jogar-cacheta-level-title">Para iniciantes</h2>
