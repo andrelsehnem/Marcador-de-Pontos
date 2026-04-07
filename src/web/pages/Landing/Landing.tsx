@@ -105,9 +105,6 @@ const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => 
           />
         </div>
 
-        {/* AdSense */}
-        <AdSense />
-
         {/* Features */}
         <div className="features">
           <h2 className="features-title">
