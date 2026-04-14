@@ -26,6 +26,16 @@ interface CachetaScreenProps {
 
 const STORAGE_KEY = 'cacheta-players-mobile';
 
+interface CachetaStorageData {
+  players: Player[];
+  dealerId: number | null;
+}
+
+const DEFAULT_PLAYERS: Player[] = [
+  { id: 1, name: 'Jogador 1', score: 10 },
+  { id: 2, name: 'Jogador 2', score: 10 },
+];
+
 const CachetaScreen: React.FC<CachetaScreenProps> = ({ onBack }) => {
   const { theme, colors } = useTheme();
   const { width, height } = useWindowDimensions();
@@ -39,13 +49,11 @@ const CachetaScreen: React.FC<CachetaScreenProps> = ({ onBack }) => {
   const primaryColor = isDark ? colors.primary : colors.secondaryDark;
   const containerPadding = isPortrait ? 16 : 12;
 
-  const [players, setPlayers] = useState<Player[]>([
-    { id: 1, name: 'Jogador 1', score: 10 },
-    { id: 2, name: 'Jogador 2', score: 10 },
-  ]);
+  const [players, setPlayers] = useState<Player[]>(DEFAULT_PLAYERS);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingName, setEditingName] = useState<string>('');
   const [loaded, setLoaded] = useState(false);
+  const [dealerId, setDealerId] = useState<number | null>(null);
   const [initialScore, setInitialScore] = useState<string>('10');
   const [initialScoreFocused, setInitialScoreFocused] = useState(false);
 
@@ -54,8 +62,19 @@ const CachetaScreen: React.FC<CachetaScreenProps> = ({ onBack }) => {
       try {
         const saved = await AsyncStorage.getItem(STORAGE_KEY);
         if (saved) {
-          setPlayers(JSON.parse(saved));
+          const parsed = JSON.parse(saved) as Player[] | CachetaStorageData;
+          if (Array.isArray(parsed)) {
+            setPlayers(parsed.length > 0 ? parsed : DEFAULT_PLAYERS);
+            setDealerId(null);
+          } else {
+            const loadedPlayers = parsed.players ?? [];
+            setPlayers(loadedPlayers.length > 0 ? loadedPlayers : DEFAULT_PLAYERS);
+            setDealerId(parsed.dealerId ?? null);
+          }
         }
+      } catch {
+        setPlayers(DEFAULT_PLAYERS);
+        setDealerId(null);
       } finally {
         setLoaded(true);
       }
@@ -70,11 +89,15 @@ const CachetaScreen: React.FC<CachetaScreenProps> = ({ onBack }) => {
     }
 
     const persistData = async () => {
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(players));
+      const payload: CachetaStorageData = {
+        players,
+        dealerId,
+      };
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     };
 
     persistData();
-  }, [players, loaded]);
+  }, [players, dealerId, loaded]);
 
   const updateScore = (playerId: number, points: number) => {
     setPlayers(players.map(p =>
@@ -91,7 +114,14 @@ const CachetaScreen: React.FC<CachetaScreenProps> = ({ onBack }) => {
   const removePlayer = (playerId: number) => {
     if (players.length > 1) {
       setPlayers(players.filter(p => p.id !== playerId));
+      if (dealerId === playerId) {
+        setDealerId(null);
+      }
     }
+  };
+
+  const toggleDealer = (playerId: number) => {
+    setDealerId(currentDealerId => (currentDealerId === playerId ? null : playerId));
   };
 
   const startEditingName = (player: Player) => {
@@ -120,7 +150,148 @@ const CachetaScreen: React.FC<CachetaScreenProps> = ({ onBack }) => {
       { id: 1, name: 'Jogador 1', score: scoreValue },
       { id: 2, name: 'Jogador 2', score: scoreValue },
     ]);
+    setDealerId(null);
   };
+
+  const movePlayer = (index: number, direction: 'up' | 'down') => {
+    const newPlayers = [...players];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= newPlayers.length) return;
+    [newPlayers[index], newPlayers[targetIndex]] = [newPlayers[targetIndex], newPlayers[index]];
+    setPlayers(newPlayers);
+  };
+
+  const renderPlayerCard = (player: Player, index: number) => (
+    <View
+      style={[
+        styles.playerCard,
+        { backgroundColor: cardColor, borderColor: primaryColor }
+      ]}
+    >
+      <View style={styles.playerHeader}>
+        <View style={styles.reorderButtons}>
+          <TouchableOpacity
+            onPress={() => movePlayer(index, 'up')}
+            style={[
+              styles.reorderButton,
+              { borderColor: primaryColor, opacity: index === 0 ? 0.2 : 1 }
+            ]}
+            disabled={index === 0}
+          >
+            <Text style={[styles.reorderButtonText, { color: primaryColor }]}>▲</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => movePlayer(index, 'down')}
+            style={[
+              styles.reorderButton,
+              { borderColor: primaryColor, opacity: index === players.length - 1 ? 0.2 : 1 }
+            ]}
+            disabled={index === players.length - 1}
+          >
+            <Text style={[styles.reorderButtonText, { color: primaryColor }]}>▼</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.playerNameContainer}>
+          {editingId === player.id ? (
+            <TextInput
+              style={[
+                styles.playerNameInput,
+                {
+                  borderColor: primaryColor,
+                  color: textColor,
+                  backgroundColor: isDark ? colors.background.dark : '#fff'
+                }
+              ]}
+              value={editingName}
+              onChangeText={setEditingName}
+              onBlur={() => saveName(player.id)}
+              onSubmitEditing={() => saveName(player.id)}
+              autoFocus
+              selectTextOnFocus
+            />
+          ) : (
+            <TouchableOpacity onPress={() => startEditingName(player)}>
+              <Text style={[styles.playerName, { color: textColor }]}>
+                {player.name}
+              </Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            onPress={() => toggleDealer(player.id)}
+            style={[
+              styles.dealerButton,
+              {
+                borderColor: primaryColor,
+                backgroundColor: dealerId === player.id ? primaryColor : 'transparent'
+              }
+            ]}
+          >
+            <Text
+              style={[
+                styles.dealerButtonText,
+                { color: dealerId === player.id ? '#fff' : primaryColor }
+              ]}
+            >
+              {dealerId === player.id ? '🚩 Deu carta' : 'Deu carta'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.playerActionsContainer}>
+          {players.length > 1 && (
+            <TouchableOpacity
+              onPress={() => removePlayer(player.id)}
+              style={[styles.removeButton, { backgroundColor: colors.danger }]}
+            >
+              <Text style={styles.removeButtonText}>✕</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+
+      <Text style={[styles.playerScore, { color: primaryColor }]}>
+        {player.score}
+      </Text>
+
+      <View style={styles.buttonsRow}>
+        <TouchableOpacity
+          style={[styles.scoreButton, styles.subtractButton, { 
+            backgroundColor: cardColor,
+            borderColor: colors.danger 
+          }]}
+          onPress={() => updateScore(player.id, -2)}
+        >
+          <Text style={[styles.scoreButtonText, { color: colors.danger }]}>-2</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.scoreButton, styles.subtractButton, { 
+            backgroundColor: cardColor,
+            borderColor: colors.danger 
+          }]}
+          onPress={() => updateScore(player.id, -1)}
+        >
+          <Text style={[styles.scoreButtonText, { color: colors.danger }]}>-1</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.scoreButton, styles.addButton, { 
+            backgroundColor: primaryColor,
+            borderColor: primaryColor 
+          }]}
+          onPress={() => updateScore(player.id, 1)}
+        >
+          <Text style={[styles.scoreButtonText, { color: '#fff' }]}>+1</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.scoreButton, styles.addButton, { 
+            backgroundColor: primaryColor,
+            borderColor: primaryColor 
+          }]}
+          onPress={() => updateScore(player.id, 2)}
+        >
+          <Text style={[styles.scoreButtonText, { color: '#fff' }]}>+2</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 
   const handleBack = async () => {
     await showInterstitialAd();
@@ -148,91 +319,9 @@ const CachetaScreen: React.FC<CachetaScreenProps> = ({ onBack }) => {
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
           >
-            {players.map((player) => (
-              <View
-                key={player.id}
-                style={[
-                  styles.playerCard,
-                  { backgroundColor: cardColor, borderColor: primaryColor }
-                ]}
-              >
-                <View style={styles.playerHeader}>
-                  {editingId === player.id ? (
-                    <TextInput
-                      style={[
-                        styles.playerNameInput,
-                        { 
-                          borderColor: primaryColor,
-                          color: textColor,
-                          backgroundColor: isDark ? colors.background.dark : '#fff'
-                        }
-                      ]}
-                      value={editingName}
-                      onChangeText={setEditingName}
-                      onBlur={() => saveName(player.id)}
-                      onSubmitEditing={() => saveName(player.id)}
-                      autoFocus
-                      selectTextOnFocus
-                    />
-                  ) : (
-                    <TouchableOpacity onPress={() => startEditingName(player)}>
-                      <Text style={[styles.playerName, { color: textColor }]}>
-                        {player.name}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                  {players.length > 1 && (
-                    <TouchableOpacity
-                      onPress={() => removePlayer(player.id)}
-                      style={[styles.removeButton, { backgroundColor: colors.danger }]}
-                    >
-                      <Text style={styles.removeButtonText}>✕</Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-
-                <Text style={[styles.playerScore, { color: primaryColor }]}>
-                  {player.score}
-                </Text>
-
-                <View style={styles.buttonsRow}>
-                  <TouchableOpacity
-                    style={[styles.scoreButton, styles.subtractButton, { 
-                      backgroundColor: cardColor,
-                      borderColor: colors.danger 
-                    }]}
-                    onPress={() => updateScore(player.id, -2)}
-                  >
-                    <Text style={[styles.scoreButtonText, { color: colors.danger }]}>-2</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.scoreButton, styles.subtractButton, { 
-                      backgroundColor: cardColor,
-                      borderColor: colors.danger 
-                    }]}
-                    onPress={() => updateScore(player.id, -1)}
-                  >
-                    <Text style={[styles.scoreButtonText, { color: colors.danger }]}>-1</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.scoreButton, styles.addButton, { 
-                      backgroundColor: primaryColor,
-                      borderColor: primaryColor 
-                    }]}
-                    onPress={() => updateScore(player.id, 1)}
-                  >
-                    <Text style={[styles.scoreButtonText, { color: '#fff' }]}>+1</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.scoreButton, styles.addButton, { 
-                      backgroundColor: primaryColor,
-                      borderColor: primaryColor 
-                    }]}
-                    onPress={() => updateScore(player.id, 2)}
-                  >
-                    <Text style={[styles.scoreButtonText, { color: '#fff' }]}>+2</Text>
-                  </TouchableOpacity>
-                </View>
+            {players.map((player, index) => (
+              <View key={player.id}>
+                {renderPlayerCard(player, index)}
               </View>
             ))}
 
@@ -365,9 +454,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
+  playerNameContainer: {
+    flex: 1,
+    gap: 6,
+    marginRight: 8,
+  },
   playerName: {
     fontSize: 18,
     fontWeight: '700',
+  },
+  dealerButton: {
+    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
   },
   playerNameInput: {
     fontSize: 18,
@@ -377,6 +478,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     minWidth: 150,
+  },
+  playerActionsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  dealerButtonText: {
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  reorderButtons: {
+    flexDirection: 'column',
+    gap: 4,
+    marginRight: 6,
+  },
+  reorderButton: {
+    width: 28,
+    height: 28,
+    borderRadius: 6,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  reorderButtonText: {
+    fontSize: 10,
+    fontWeight: '700',
+    lineHeight: 12,
   },
   removeButton: {
     width: 32,

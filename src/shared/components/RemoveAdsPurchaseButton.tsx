@@ -3,6 +3,7 @@ import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, Platform } from 
 import { useBillingPurchase } from '../hooks/useBillingPurchase';
 import { usePurchase } from '../contexts/PurchaseContext';
 import { useTheme } from '../contexts/ThemeContext';
+import { isBillingSupportedRuntime } from '../services/billing';
 
 interface RemoveAdsPurchaseButtonProps {
   style?: any;
@@ -24,6 +25,10 @@ export const RemoveAdsPurchaseButton: React.FC<RemoveAdsPurchaseButtonProps> = (
 
   // Não mostrar botão em plataformas não-Android
   if (Platform.OS !== 'android') {
+    return null;
+  }
+
+  if (!isBillingSupportedRuntime()) {
     return null;
   }
 

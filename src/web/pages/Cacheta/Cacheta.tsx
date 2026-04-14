@@ -10,23 +10,49 @@ interface Player {
     score: number;
 }
 
+interface CachetaStorageData {
+    players: Player[];
+    dealerId: number | null;
+    initialScore?: number;
+}
+
 const Cacheta: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     const themeStyles = useThemeStyles();
     const [expandContent, setExpandContent] = useState(false);
     const [players, setPlayers] = useState<Player[]>([
-        { id: 1, name: 'Jogador 1', score: 0 },
-        { id: 2, name: 'Jogador 2', score: 0 },
+        { id: 1, name: 'Jogador 1', score: 10 },
+        { id: 2, name: 'Jogador 2', score: 10 },
     ]);
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editingName, setEditingName] = useState<string>('');
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [dealerId, setDealerId] = useState<number | null>(null);
+    const [initialScore, setInitialScore] = useState<string>('10');
+    const [initialScoreFocused, setInitialScoreFocused] = useState(false);
+
+    const getSanitizedInitialScore = (value: string): number => {
+        const parsed = Number.parseInt(value, 10);
+        if (Number.isNaN(parsed)) {
+            return 0;
+        }
+
+        return Math.max(parsed, 0);
+    };
 
     // Carrega os dados do localStorage ao montar o componente
     useEffect(() => {
         const savedPlayers = localStorage.getItem('cacheta_players');
         if (savedPlayers) {
             try {
-                setPlayers(JSON.parse(savedPlayers));
+                const parsed = JSON.parse(savedPlayers) as Player[] | CachetaStorageData;
+                if (Array.isArray(parsed)) {
+                    setPlayers(parsed);
+                    setDealerId(null);
+                } else {
+                    setPlayers(parsed.players ?? []);
+                    setDealerId(parsed.dealerId ?? null);
+                    setInitialScore((parsed.initialScore ?? 10).toString());
+                }
             } catch (error) {
                 console.error('Erro ao carregar jogadores do cache:', error);
             }
@@ -35,8 +61,13 @@ const Cacheta: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
     // Salva os jogadores no localStorage sempre que eles mudam
     useEffect(() => {
-        localStorage.setItem('cacheta_players', JSON.stringify(players));
-    }, [players]);
+        const payload: CachetaStorageData = {
+            players,
+            dealerId,
+            initialScore: getSanitizedInitialScore(initialScore),
+        };
+        localStorage.setItem('cacheta_players', JSON.stringify(payload));
+    }, [players, dealerId, initialScore]);
 
     const updateScore = (playerId: number, points: number) => {
         setPlayers(players.map(p =>
@@ -46,13 +77,21 @@ const Cacheta: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
     const addPlayer = () => {
         const newId = Math.max(...players.map(p => p.id), 0) + 1;
-        setPlayers([...players, { id: newId, name: `Jogador ${newId}`, score: 0 }]);
+        const scoreValue = getSanitizedInitialScore(initialScore);
+        setPlayers([...players, { id: newId, name: `Jogador ${newId}`, score: scoreValue }]);
     };
 
     const removePlayer = (playerId: number) => {
         if (players.length > 1) {
             setPlayers(players.filter(p => p.id !== playerId));
+            if (dealerId === playerId) {
+                setDealerId(null);
+            }
         }
+    };
+
+    const toggleDealer = (playerId: number) => {
+        setDealerId(currentDealerId => (currentDealerId === playerId ? null : playerId));
     };
 
     const startEditingName = (player: Player) => {
@@ -69,14 +108,17 @@ const Cacheta: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     };
 
     const resetGame = () => {
-        setPlayers(players.map(p => ({ ...p, score: 0 })));
+        const scoreValue = getSanitizedInitialScore(initialScore);
+        setPlayers(players.map(p => ({ ...p, score: scoreValue })));
     };
 
     const resetPlayers = () => {
+        const scoreValue = getSanitizedInitialScore(initialScore);
         setPlayers([
-            { id: 1, name: 'Jogador 1', score: 0 },
-            { id: 2, name: 'Jogador 2', score: 0 },
+            { id: 1, name: 'Jogador 1', score: scoreValue },
+            { id: 2, name: 'Jogador 2', score: scoreValue },
         ]);
+        setDealerId(null);
     };
 
     return (
@@ -158,6 +200,61 @@ const Cacheta: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                         <span className="sidebar-button-icon">🔃</span>
                         <span>Reiniciar Jogo</span>
                     </button>
+
+                    <div className="sidebar-initial-score">
+                        <span className="sidebar-initial-score-label">
+                            🎯 Pontuação Inicial
+                        </span>
+                        <div
+                            className="sidebar-score-controls"
+                            style={{
+                                borderColor: initialScoreFocused
+                                    ? 'rgba(255, 255, 255, 0.9)'
+                                    : 'rgba(255, 255, 255, 0.35)',
+                                backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                            }}
+                        >
+                            <button
+                                type="button"
+                                className="initial-score-button"
+                                onClick={() => {
+                                    const value = getSanitizedInitialScore(initialScore);
+                                    setInitialScore(Math.max(value - 1, 0).toString());
+                                }}
+                                style={{ color: themeStyles.buttonPrimary.text }}
+                            >
+                                −
+                            </button>
+                            <input
+                                type="text"
+                                inputMode="numeric"
+                                pattern="[0-9]*"
+                                maxLength={3}
+                                className="initial-score-input"
+                                value={initialScore}
+                                onChange={(e) => setInitialScore(e.target.value)}
+                                onFocus={() => setInitialScoreFocused(true)}
+                                onBlur={() => {
+                                    setInitialScoreFocused(false);
+                                    setInitialScore(getSanitizedInitialScore(initialScore).toString());
+                                }}
+                                placeholder="Ex: 10"
+                                aria-label="Pontuação Inicial"
+                                style={{ color: themeStyles.buttonPrimary.text }}
+                            />
+                            <button
+                                type="button"
+                                className="initial-score-button"
+                                onClick={() => {
+                                    const value = getSanitizedInitialScore(initialScore);
+                                    setInitialScore((value + 1).toString());
+                                }}
+                                style={{ color: themeStyles.buttonPrimary.text }}
+                            >
+                                +
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -196,31 +293,44 @@ const Cacheta: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                         style={{ backgroundColor: themeStyles.surface }}
                     >
                         <div className="player-header">
-                            {editingId === player.id ? (
-                                <input
-                                    type="text"
-                                    className="player-name-input"
+                            <div className="player-name-container">
+                                {editingId === player.id ? (
+                                    <input
+                                        type="text"
+                                        className="player-name-input"
+                                        style={{
+                                            borderColor: themeStyles.buttonPrimary.bg,
+                                            color: '#000000',
+                                            backgroundColor: '#ffffff'
+                                        }}
+                                        value={editingName}
+                                        onChange={(e) => setEditingName(e.target.value)}
+                                        onBlur={() => saveName(player.id)}
+                                        onKeyPress={(e) => e.key === 'Enter' && saveName(player.id)}
+                                        autoFocus
+                                    />
+                                ) : (
+                                    <h2
+                                        className="player-name"
+                                        style={{ color: themeStyles.textPrimary }}
+                                        onClick={() => startEditingName(player)}
+                                        title="Clique para editar"
+                                    >
+                                        {player.name}
+                                    </h2>
+                                )}
+                                <button
+                                    className="dealer-button"
+                                    onClick={() => toggleDealer(player.id)}
                                     style={{
                                         borderColor: themeStyles.buttonPrimary.bg,
-                                        color: '#000000',
-                                        backgroundColor: '#ffffff'
+                                        backgroundColor: dealerId === player.id ? themeStyles.buttonPrimary.bg : 'transparent',
+                                        color: dealerId === player.id ? '#ffffff' : themeStyles.buttonPrimary.bg,
                                     }}
-                                    value={editingName}
-                                    onChange={(e) => setEditingName(e.target.value)}
-                                    onBlur={() => saveName(player.id)}
-                                    onKeyPress={(e) => e.key === 'Enter' && saveName(player.id)}
-                                    autoFocus
-                                />
-                            ) : (
-                                <h2
-                                    className="player-name"
-                                    style={{ color: themeStyles.textPrimary }}
-                                    onClick={() => startEditingName(player)}
-                                    title="Clique para editar"
                                 >
-                                    {player.name}
-                                </h2>
-                            )}
+                                    {dealerId === player.id ? '🚩 Deu carta' : 'Deu carta'}
+                                </button>
+                            </div>
                             {players.length > 1 && (
                                 <button
                                     className="remove-button"

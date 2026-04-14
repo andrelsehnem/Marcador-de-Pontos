@@ -4,10 +4,19 @@ import * as RNIap from 'react-native-iap';
 import { ErrorCode } from 'react-native-iap';
 import {
   PRODUCT_ID,
+  getProductDetails,
   setPurchaseStatus,
   isBillingSupportedRuntime,
 } from '../services/billing';
 import { usePurchase } from '../contexts/PurchaseContext';
+
+const getPurchaseErrorMessage = (error: { code?: string | null }) => {
+  if (error.code === ErrorCode.DeveloperError) {
+    return 'Configuração inválida para compra. Verifique se está em build nativo (não Expo Go), se o produto existe no Play Console e se o app foi instalado via Play no track de teste.';
+  }
+
+  return 'Não foi possível completar a compra. Tente novamente.';
+};
 
 export const useBillingPurchase = () => {
   const [loading, setLoading] = useState(false);
@@ -38,7 +47,7 @@ export const useBillingPurchase = () => {
       // UserCancelled indica que o usuário fechou o dialog sem comprar
       if (error.code !== ErrorCode.UserCancelled) {
         console.log('Erro na compra:', error);
-        Alert.alert('Erro', 'Não foi possível completar a compra. Tente novamente.');
+        Alert.alert('Erro', getPurchaseErrorMessage(error));
       }
       setLoading(false);
     });
@@ -55,20 +64,46 @@ export const useBillingPurchase = () => {
       return;
     }
 
+    if (!isBillingSupportedRuntime()) {
+      Alert.alert(
+        'Compras indisponíveis',
+        'Use uma versão Android instalada via Play Store ou Development Build (não funciona no Expo Go).'
+      );
+      return;
+    }
+
     try {
       setLoading(true);
       await RNIap.initConnection();
+
+      const product = await getProductDetails();
+      if (!product) {
+        Alert.alert(
+          'Produto indisponível',
+          `O item de compra (${PRODUCT_ID}) não foi encontrado na Play Store para este app/conta.`
+        );
+        setLoading(false);
+        return;
+      }
+
+      const sku = product.id || PRODUCT_ID;
+      if (!sku) {
+        Alert.alert('Erro', 'SKU de compra inválido. Verifique a configuração do PRODUCT_ID.');
+        setLoading(false);
+        return;
+      }
+
       await RNIap.requestPurchase({
         type: 'in-app',
         request: {
-          google: { skus: [PRODUCT_ID] },
+          google: { skus: [sku] },
         },
       });
       // O resultado chega via purchaseUpdatedListener acima
     } catch (error: any) {
       if (error?.code !== ErrorCode.UserCancelled) {
         console.log('Erro ao iniciar compra:', error);
-        Alert.alert('Erro', 'Não foi possível iniciar a compra. Verifique sua conexão.');
+        Alert.alert('Erro', getPurchaseErrorMessage(error));
       }
       setLoading(false);
     }

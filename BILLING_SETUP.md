@@ -9,7 +9,7 @@ Este documento explica como configurar completamente o fluxo de compra de "Remov
 3. Vá para **Monetização** > **Produtos Únicos**
 4. Clique em **Criar Produto**
 5. Configure:
-   - **ID do Produto**: `remove_ads` (ou use outro ID que preferir)
+  - **ID do Produto**: `no_ads_marcador_pontos_1` (ou use outro ID, mas mantenha exatamente igual no código)
    - **Título**: Remover Anúncios
    - **Descrição**: Remove anúncios de banner do app
    - **Preço**: Defina o preço desejado (ex: R$ 4,99)
@@ -20,7 +20,7 @@ Este documento explica como configurar completamente o fluxo de compra de "Remov
 Abra o arquivo `src/shared/services/billing.ts` e atualize:
 
 ```typescript
-export const PRODUCT_ID = 'remove_ads'; // Substitua pelo ID do seu produto
+export const PRODUCT_ID = 'no_ads_marcador_pontos_1'; // Substitua pelo ID do seu produto
 ```
 
 ## Passo 3: Implementação Completa da Billing Library (Avançado)

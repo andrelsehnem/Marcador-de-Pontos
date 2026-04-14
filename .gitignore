@@ -28,3 +28,4 @@ local.properties
 # Bundle artifacts
 *.jsbundle
 
+PLAY_STORE_RELEASE_NOTES_2.0.10.txt

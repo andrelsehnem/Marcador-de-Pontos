@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
   return (
     <footer className="app-footer" data-theme={theme}>
       <div className="footer-content">
-        <p>© 2026 Marcador de Baralho - Por <a href="https://andre100.dev" target="_blank" rel="noopener noreferrer">André Luis Sehnem</a></p>
+        <p>© 2026 Marcador de Pontos - Por <a href="https://andre100.dev" target="_blank" rel="noopener noreferrer">André Luis Sehnem</a></p>
       </div>
     </footer>
   );

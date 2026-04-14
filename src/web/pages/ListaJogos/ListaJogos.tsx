@@ -20,7 +20,7 @@ const ListaJogos: React.FC<{ onNavigate: (page: string) => void }> = ({ onNaviga
       <ThemeToggle />
       <div className="home-content">
         <h1 className="home-title" style={{ color: themeStyles.textPrimary }}>
-          Marcador de Baralho Online
+          Marcador de Pontos Online
         </h1>
         <p className="home-subtitle" style={{ color: themeStyles.textSecondary }}>
           Acompanhe suas mãos e jogadas com facilidade!
@@ -89,10 +89,10 @@ const ListaJogos: React.FC<{ onNavigate: (page: string) => void }> = ({ onNaviga
         {expandContent && (
           <section style={{ marginTop: '20px', marginBottom: '30px', opacity: expandContent ? 1 : 0, transition: 'opacity 0.3s' }}>
             <h2 style={{ color: themeStyles.textPrimary, marginBottom: '15px', fontSize: '1.3em' }}>
-              Jogos de Baralho Disponíveis
+              Jogos Disponíveis
             </h2>
             <p style={{ color: themeStyles.textSecondary, lineHeight: '1.6', marginBottom: '15px' }}>
-              Bem-vindo ao melhor marcador de baralho do Brasil! Aqui você encontra ferramentas inteligentes para marcar pontos de forma rápida, prática e totalmente gratuita. Escolha entre os jogos mais populares e comece a jogar agora mesmo:
+              Bem-vindo ao melhor marcador de pontos do Brasil! Aqui você encontra ferramentas inteligentes para marcar pontos de forma rápida, prática e totalmente gratuita. Escolha entre os jogos mais populares e comece a jogar agora mesmo:
             </p>
 
             <div style={{ 
