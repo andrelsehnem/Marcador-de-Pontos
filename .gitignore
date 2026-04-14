@@ -5,6 +5,12 @@ dist/
 marcador.keystore
 android/upload-keystore.jks
 android/gradle.properties
+android/app/debug.keystore
+android/app/*.keystore
+
+# Expo local files
+.expo/*
+!.expo/README.md
 build android.txt
 android/.gradle/
 android/.kotlin/
