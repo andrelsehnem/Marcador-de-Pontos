@@ -4,11 +4,14 @@ import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
 
 
 const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => {
-  const [stars, setStars] = useState([]);
+  type Star = { id: number; left: number; top: number; delay: number };
+  const [stars, setStars] = useState<Star[]>([]);
 
   useEffect(() => {
-    const newStars = [];
-    for (let i = 0; i < 50; i++) {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+    const newStars: Star[] = [];
+    for (let i = 0; i < 20; i++) {
       newStars.push({
         id: i,
         left: Math.random() * 100,
@@ -101,7 +104,7 @@ const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => 
               Aplicativo em desenvolvimento, disponível na Google Play Store."
             buttonText="Abrir na Play Store"
             buttonStyle={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', color: 'white' }}
-            onClick={() => window.open('https://play.google.com/store/apps/details?id=dev.andre100.marcadorPontos', '_blank')}
+            onClick={() => window.open('https://play.google.com/store/apps/details?id=dev.andre100.marcadorPontos', '_blank', 'noopener,noreferrer')}
           />
         </div>
 
@@ -122,7 +125,8 @@ const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => 
   );
 };
 
-const CTACard = ({ icon, title, description, buttonText, buttonStyle, onClick }) => {
+type CTACardProps = { icon: string; title: string; description: string; buttonText: string; buttonStyle: React.CSSProperties; onClick: () => void };
+const CTACard = ({ icon, title, description, buttonText, buttonStyle, onClick }: CTACardProps) => {
   return (
     <div className="cta-card" onClick={onClick}>
       <div className="cta-card-header">
@@ -135,7 +139,7 @@ const CTACard = ({ icon, title, description, buttonText, buttonStyle, onClick })
   );
 };
 
-const Feature = ({ icon, text }) => {
+const Feature = ({ icon, text }: { icon: string; text: string }) => {
   return (
     <div className="feature-card">
       <div className="feature-icon">{icon}</div>

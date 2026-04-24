@@ -230,6 +230,24 @@
   margin: 0 auto;
 }
 
+/* Respeitar preferência do usuário por movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  .logo,
+  .star,
+  .card-flip,
+  .title,
+  .subtitle,
+  .cards,
+  .cta,
+  .features {
+    animation: none !important;
+    transition: none !important;
+  }
+  .stars {
+    display: none;
+  }
+}
+
 /* Feature card */
 .feature-card {
   background: rgba(255,255,255,0.1);

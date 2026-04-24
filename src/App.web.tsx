@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import './web/styles/global.css';
 import { ThemeProvider } from './shared/contexts/ThemeContext';
-import ListaJogos from './web/pages/ListaJogos/ListaJogos';
-import Landing from './web/pages/Landing/Landing';
-import Cacheta from './web/pages/Cacheta/Cacheta';
-import Truco from './web/pages/Truco/Truco';
-import ComoJogarTruco from './web/pages/ComoJogarTruco/ComoJogarTruco';
-import ComoJogarCacheta from './web/pages/ComoJogarCacheta/ComoJogarCacheta';
 import Footer from './shared/components/Footer/Footer';
 import { Analytics } from '@vercel/analytics/react';
+
+const ListaJogos = lazy(() => import('./web/pages/ListaJogos/ListaJogos'));
+const Landing = lazy(() => import('./web/pages/Landing/Landing'));
+const Cacheta = lazy(() => import('./web/pages/Cacheta/Cacheta'));
+const Truco = lazy(() => import('./web/pages/Truco/Truco'));
+const ComoJogarTruco = lazy(() => import('./web/pages/ComoJogarTruco/ComoJogarTruco'));
+const ComoJogarCacheta = lazy(() => import('./web/pages/ComoJogarCacheta/ComoJogarCacheta'));
 
 type WebPage = 'landing' | 'listajogos' | 'truco' | 'cacheta' | 'como-jogar-truco' | 'como-jogar-cacheta';
 
@@ -130,24 +131,26 @@ export default function App() {
   return (
     <div style={{ width: '100%', minHeight: '100vh', margin: 0, padding: 0, display: 'flex', flexDirection: 'column' }}>
       <ThemeProvider>
-        <div style={{ flex: 1 }}>
-          {currentPage === 'landing' && <Landing onNavigate={navigateTo} />}
-          {currentPage === 'listajogos' && <ListaJogos onNavigate={navigateTo} />}
-          {currentPage === 'truco' && <Truco onBack={() => navigateTo('listajogos')} />}
-          {currentPage === 'como-jogar-truco' && (
-            <ComoJogarTruco
-              onBack={() => navigateTo('listajogos')}
-              onPlayTruco={() => navigateTo('truco')}
-            />
-          )}
-          {currentPage === 'como-jogar-cacheta' && (
-            <ComoJogarCacheta
-              onBack={() => navigateTo('listajogos')}
-              onPlayCacheta={() => navigateTo('cacheta')}
-            />
-          )}
-          {currentPage === 'cacheta' && <Cacheta onBack={() => navigateTo('listajogos')} />}
-        </div>
+        <main style={{ flex: 1 }}>
+          <Suspense fallback={null}>
+            {currentPage === 'landing' && <Landing onNavigate={navigateTo} />}
+            {currentPage === 'listajogos' && <ListaJogos onNavigate={navigateTo} />}
+            {currentPage === 'truco' && <Truco onBack={() => navigateTo('listajogos')} />}
+            {currentPage === 'como-jogar-truco' && (
+              <ComoJogarTruco
+                onBack={() => navigateTo('listajogos')}
+                onPlayTruco={() => navigateTo('truco')}
+              />
+            )}
+            {currentPage === 'como-jogar-cacheta' && (
+              <ComoJogarCacheta
+                onBack={() => navigateTo('listajogos')}
+                onPlayCacheta={() => navigateTo('cacheta')}
+              />
+            )}
+            {currentPage === 'cacheta' && <Cacheta onBack={() => navigateTo('listajogos')} />}
+          </Suspense>
+        </main>
         <Footer />
       </ThemeProvider>
       <Analytics />
