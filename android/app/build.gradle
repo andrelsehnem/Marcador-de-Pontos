@@ -81,6 +81,62 @@ def enableMinifyInReleaseBuilds = (findProperty('android.enableMinifyInReleaseBu
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
+def resolveReleaseKeystoreFile = { String configuredPath ->
+    File candidate = file(configuredPath)
+    if (candidate.exists()) {
+        return candidate
+    }
+
+    if (new File(configuredPath).isAbsolute()) {
+        return candidate
+    }
+
+    File fromAndroidRoot = rootProject.file(configuredPath)
+    if (fromAndroidRoot.exists()) {
+        return fromAndroidRoot
+    }
+
+    if (configuredPath.startsWith('app/')) {
+        File withoutAppPrefix = rootProject.file(configuredPath.substring(4))
+        if (withoutAppPrefix.exists()) {
+            return withoutAppPrefix
+        }
+    }
+
+    File repoRootKeystore = rootProject.file('../marcador.keystore')
+    if (repoRootKeystore.exists()) {
+        return repoRootKeystore
+    }
+
+    return candidate
+}
+
+def resolveReleaseKeyAlias = { File keystoreFile, String storePassword, String configuredAlias ->
+    if (!storePassword?.trim()) {
+        return configuredAlias
+    }
+
+    def keyStore = java.security.KeyStore.getInstance(java.security.KeyStore.getDefaultType())
+    keystoreFile.withInputStream { input ->
+        keyStore.load(input, storePassword.toCharArray())
+    }
+
+    if (configuredAlias?.trim() && keyStore.containsAlias(configuredAlias)) {
+        return configuredAlias
+    }
+
+    if (keyStore.containsAlias('marcador')) {
+        return 'marcador'
+    }
+
+    def aliases = keyStore.aliases().toList()
+    if (!aliases.isEmpty()) {
+        return aliases[0]
+    }
+
+    return configuredAlias
+}
+
 android {
     ndkVersion rootProject.ext.ndkVersion
 
@@ -92,8 +148,8 @@ android {
         applicationId 'dev.andre100.marcadorPontos'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 9
-        versionName "2.0.9"
+        versionCode 13
+        versionName "2.0.13"
 
         buildConfigField "String", "REACT_NATIVE_RELEASE_LEVEL", "\"${findProperty('reactNativeReleaseLevel') ?: 'stable'}\""
     }
@@ -106,9 +162,21 @@ android {
         }
         release {
             if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
-                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                def releaseStoreFile = resolveReleaseKeystoreFile(MYAPP_UPLOAD_STORE_FILE.toString())
+                if (!releaseStoreFile.exists()) {
+                    throw new GradleException("Keystore de release nao encontrado. Verifique MYAPP_UPLOAD_STORE_FILE: ${MYAPP_UPLOAD_STORE_FILE}")
+                }
+                def storePasswordValue = project.hasProperty('MYAPP_UPLOAD_STORE_PASSWORD') ? MYAPP_UPLOAD_STORE_PASSWORD.toString() : null
+                def configuredKeyAlias = project.hasProperty('MYAPP_UPLOAD_KEY_ALIAS') ? MYAPP_UPLOAD_KEY_ALIAS.toString() : null
+                def resolvedKeyAlias = resolveReleaseKeyAlias(releaseStoreFile, storePasswordValue, configuredKeyAlias)
+
+                if (!resolvedKeyAlias?.trim()) {
+                    throw new GradleException("Alias de chave nao configurado. Defina MYAPP_UPLOAD_KEY_ALIAS.")
+                }
+
+                storeFile releaseStoreFile
                 storePassword MYAPP_UPLOAD_STORE_PASSWORD
-                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyAlias resolvedKeyAlias
                 keyPassword MYAPP_UPLOAD_KEY_PASSWORD
             }
         }

@@ -4,7 +4,6 @@
 - Projeto React Native + Expo com Web (`expo`, `react-native-web`, `typescript`).
 - Priorize mudanças pequenas e objetivas.
 - Responda e escreva código em português (pt-BR), salvo quando o código exigir inglês.
-- Não crie arquivos .md ou .txt, a menos que eu solicite especificamente.
 
 ## Regras de implementação
 - Preserve o padrão existente do projeto antes de criar novos padrões.

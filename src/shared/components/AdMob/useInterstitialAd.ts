@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import { getInterstitialAdUnitId } from '../../services/admob';
+import { usePurchase } from '../../contexts/PurchaseContext';
 
 let hasWarnedMissingAdMob = false;
 
@@ -46,6 +47,7 @@ export const useInterstitialAd = (
   const interstitialRef = useRef<any | null>(null);
   const unsubscribeListenersRef = useRef<Array<() => void>>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const { isPurchased } = usePurchase();
   const adsModule = getGoogleMobileAdsModule();
 
   const resolvedUnitId =
@@ -61,7 +63,10 @@ export const useInterstitialAd = (
 
   const loadInterstitialAd = useCallback(() => {
     try {
-      if (!adsModule) {
+      if (!adsModule || isPurchased) {
+        cleanupListeners();
+        interstitialRef.current = null;
+        setIsLoaded(false);
         return;
       }
 
@@ -94,10 +99,14 @@ export const useInterstitialAd = (
       setIsLoaded(false);
       console.log('Erro ao carregar Interstitial Ad:', error);
     }
-  }, [adsModule, cleanupListeners, resolvedUnitId]);
+  }, [adsModule, cleanupListeners, isPurchased, resolvedUnitId]);
 
   const showInterstitialAd = useCallback(async () => {
     try {
+      if (isPurchased) {
+        return false;
+      }
+
       if (interstitialRef.current && isLoaded) {
         await interstitialRef.current.show();
         return true;
@@ -109,18 +118,22 @@ export const useInterstitialAd = (
       console.log('Erro ao mostrar Interstitial Ad:', error);
       return false;
     }
-  }, [isLoaded]);
+  }, [isLoaded, isPurchased]);
 
   useEffect(() => {
-    if (adsModule) {
+    if (adsModule && !isPurchased) {
       loadInterstitialAd();
+    } else {
+      cleanupListeners();
+      interstitialRef.current = null;
+      setIsLoaded(false);
     }
 
     return () => {
       cleanupListeners();
       interstitialRef.current = null;
     };
-  }, [adsModule, cleanupListeners, loadInterstitialAd]);
+  }, [adsModule, cleanupListeners, isPurchased, loadInterstitialAd]);
 
   return {
     isLoaded,

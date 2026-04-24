@@ -5,6 +5,7 @@ import * as RNIap from 'react-native-iap';
 
 // ID do produto único criado no Play Console
 export const PRODUCT_ID = 'no_ads_marcador_pontos_1';
+export const PROMOTIONAL_OFFER_ID = 'oferta-noads-marcadorpontos1';
 
 const PURCHASE_STORAGE_KEY = 'app-purchase-remove-ads';
 

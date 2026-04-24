@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
 import { useTheme } from '../../shared/contexts/ThemeContext';
 import { useInterstitialAd } from '../../shared/components/AdMob/useInterstitialAd';
 import { RemoveAdsPurchaseButton } from '../../shared/components/RemoveAdsPurchaseButton';
+import { usePurchase } from '../../shared/contexts/PurchaseContext';
 
 interface HomeScreenProps {
   onOpenTruco: () => void;
@@ -18,12 +19,17 @@ interface HomeScreenProps {
 const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco, onOpenCacheta }) => {
   const { theme, toggleTheme, colors } = useTheme();
   const { showInterstitialAd } = useInterstitialAd();
+  const { refreshPurchaseStatus } = usePurchase();
   
   const isDark = theme === 'dark';
   const bgColor = isDark ? colors.background.dark : colors.background.light;
   const textColor = isDark ? colors.text.dark : colors.text.light;
   const subtitleColor = isDark ? colors.text.dark : colors.text.secondary;
   const primaryColor = isDark ? colors.primary : colors.secondaryDark;
+
+  useEffect(() => {
+    refreshPurchaseStatus();
+  }, [refreshPurchaseStatus]);
 
   const handleOpenTruco = async () => {
     await showInterstitialAd();

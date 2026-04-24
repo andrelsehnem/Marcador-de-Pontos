@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ThemeProvider } from './shared/contexts/ThemeContext';
 import { PurchaseProvider } from './shared/contexts/PurchaseContext';
 import HomeScreen from './mobile/screens/HomeScreen';
@@ -15,8 +16,9 @@ export default function App() {
   }, []);
 
   return (
-    <ThemeProvider>
-      <PurchaseProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider>
+        <PurchaseProvider>
         {currentPage === 'home' && (
           <HomeScreen 
             onOpenTruco={() => setCurrentPage('truco')}
@@ -25,7 +27,8 @@ export default function App() {
         )}
         {currentPage === 'truco' && <TrucoScreen onBack={() => setCurrentPage('home')} />}
         {currentPage === 'cacheta' && <CachetaScreen onBack={() => setCurrentPage('home')} />}
-      </PurchaseProvider>
-    </ThemeProvider>
+        </PurchaseProvider>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
