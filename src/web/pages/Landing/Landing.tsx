@@ -10,7 +10,18 @@ const CARDS: { suit: string; red: boolean }[] = [
 
 const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => {
   type Star = { id: number; left: number; top: number; delay: number; size: number };
+  const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=dev.andre100.marcadorPontos';
   const [stars, setStars] = useState<Star[]>([]);
+  const [showAppSticky, setShowAppSticky] = useState(false);
+
+  const openPlayStore = () => {
+    window.open(PLAY_STORE_URL, '_blank', 'noopener,noreferrer');
+  };
+
+  const scrollToStatsBar = () => {
+    const statsBar = document.getElementById('web-cta-card');
+    statsBar?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -23,6 +34,16 @@ const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => 
       size: Math.random() < 0.2 ? 3 : 2,
     }));
     setStars(newStars);
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setShowAppSticky(window.scrollY > 420);
+    };
+
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
@@ -63,17 +84,15 @@ const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => 
               <span className="title-accent">Pontos</span>
             </h1>
             <p className="subtitle">
-              Chega de papel e caneta. Controle a pontuação dos seus jogos de baralho de forma simples, rápida e sem perder o progresso.
+              Chega de papel e caneta. Baixe o app e marque pontos de forma rápida, com progresso salvo e jogos disponíveis até offline.
             </p>
             <div className="hero-actions">
-              <button className="hero-btn hero-btn-primary" onClick={() => onNavigate('cacheta')}>
-                🃏 Jogar Cacheta
+              <button className="hero-btn hero-btn-primary" onClick={openPlayStore}>
+                📱 Baixar no Android
               </button>
-              <button className="hero-btn hero-btn-secondary" onClick={() => onNavigate('truco')}>
-                🎯 Jogar Truco
-              </button>
+
             </div>
-            <button className="hero-link" onClick={() => onNavigate('listajogos')}>
+            <button className="hero-link" onClick={scrollToStatsBar}>
               Ver todos os jogos →
             </button>
           </div>
@@ -102,9 +121,9 @@ const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => 
       </section>
 
       {/* ── Stats bar ────────────────────────────── */}
-      <div className="stats-bar">
+      <div id="stats-bar" className="stats-bar">
         <div className="stat">
-          <span className="stat-num">2</span>
+          <span className="stat-num">3</span>
           <span className="stat-label">Jogos disponíveis</span>
         </div>
         <div className="stat-sep" aria-hidden="true">◆</div>
@@ -124,10 +143,24 @@ const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => 
         </div>
       </div>
 
-      <div className="landing-container">
+      <div className="landing-container" id="web-cta-card">
 
         {/* ── CTA Section ──────────────────────── */}
-        <div className="cta">
+        <div className="cta"  >
+          <CTACard
+            icon="📱"
+            title="Aplicativo Android"
+            description="Leve seus jogos a qualquer lugar. Jogue offline quando quiser e continue suas partidas sem perder progresso."
+            buttonText="Abrir na Play Store"
+            buttonStyle={{
+              background: 'linear-gradient(135deg, #C9A84C 0%, #E8C96A 50%, #C9A84C 100%)',
+              color: '#080C18',
+            }}
+            onClick={openPlayStore}
+            featured
+            badge="Mais prático"
+          />
+
           <div className="cta-card">
             <div className="cta-card-header">
               <span className="cta-card-icon">🌐</span>
@@ -157,18 +190,6 @@ const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => 
               </button>
             </div>
           </div>
-
-          <CTACard
-            icon="📱"
-            title="Aplicativo Android"
-            description="Leve seus jogos a qualquer lugar. Jogue offline quando quiser — disponível na Google Play Store."
-            buttonText="Abrir na Play Store"
-            buttonStyle={{
-              background: 'linear-gradient(135deg, #C9A84C 0%, #E8C96A 50%, #C9A84C 100%)',
-              color: '#080C18',
-            }}
-            onClick={() => window.open('https://play.google.com/store/apps/details?id=dev.andre100.marcadorPontos', '_blank', 'noopener,noreferrer')}
-          />
         </div>
 
         {/* ── Features ─────────────────────────── */}
@@ -189,14 +210,31 @@ const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => 
         </div>
 
       </div>
+
+      {showAppSticky && (
+        <div className="app-sticky-cta" role="region" aria-label="Baixar aplicativo Android">
+          <span className="app-sticky-text">📱 Jogue no app Android (offline)</span>
+          <button className="app-sticky-button" onClick={openPlayStore}>Baixar agora</button>
+        </div>
+      )}
     </div>
   );
 };
 
-type CTACardProps = { icon: string; title: string; description: string; buttonText: string; buttonStyle: React.CSSProperties; onClick: () => void };
-const CTACard = ({ icon, title, description, buttonText, buttonStyle, onClick }: CTACardProps) => {
+type CTACardProps = {
+  icon: string;
+  title: string;
+  description: string;
+  buttonText: string;
+  buttonStyle: React.CSSProperties;
+  onClick: () => void;
+  featured?: boolean;
+  badge?: string;
+};
+const CTACard = ({ icon, title, description, buttonText, buttonStyle, onClick, featured, badge }: CTACardProps) => {
   return (
-    <div className="cta-card cta-card-clickable" onClick={onClick}>
+    <div className={`cta-card cta-card-clickable${featured ? ' cta-card-featured' : ''}`} onClick={onClick}>
+      {badge && <span className="cta-badge">{badge}</span>}
       <div className="cta-card-header">
         <span className="cta-card-icon">{icon}</span>
         <h2 className="cta-card-title">{title}</h2>

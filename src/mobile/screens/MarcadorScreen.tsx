@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Platform,
   SafeAreaView,
   StatusBar,
   StyleSheet,
@@ -10,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useKeepAwake } from 'expo-keep-awake';
 // Importação lazy para evitar crash em builds sem o módulo nativo linkado
 let ScreenOrientation: typeof import('expo-screen-orientation') | null = null;
 try {
@@ -45,6 +47,7 @@ const MarcadorScreen: React.FC<MarcadorScreenProps> = ({ onBack }) => {
   const { theme, colors } = useTheme();
   const { showInterstitialAd } = useInterstitialAd();
   const { width, height } = useWindowDimensions();
+  useKeepAwake();
 
   const isDark = theme === 'dark';
   const isPortrait = height >= width;
@@ -145,18 +148,20 @@ const MarcadorScreen: React.FC<MarcadorScreenProps> = ({ onBack }) => {
   const scoreShadow = isDark ? 'rgba(0,0,0,0.55)' : 'rgba(0,0,0,0.28)';
   const zoneTextColor = isDark ? 'rgba(255,255,255,0.86)' : 'rgba(10,18,36,0.82)';
 
-  const nameFontSize = isPortrait ? 32 : 24;
-  const scoreFontSize = isPortrait ? 44 : 32;
+  const nameFontSize = isPortrait ? 40 : 30;
+  const nameInputWidth = isPortrait ? 240 : 280;
+  const scoreFontSize = isPortrait ? 56 : 120  ;
   const deltaFontSize = isPortrait ? 42 : 32;
+  const topInset = Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) : 0;
 
   return (
     <>
       <StatusBar
         barStyle={isDark ? 'light-content' : 'dark-content'}
         backgroundColor={bgColor}
-        translucent
+        translucent={false}
       />
-      <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}> 
+      <SafeAreaView style={[styles.container, { backgroundColor: bgColor, paddingTop: topInset }]}>
         <View style={[styles.header, { backgroundColor: headerBg, borderBottomColor: dividerColor, borderTopColor: dividerColor }]}> 
           <TouchableOpacity onPress={handleBack} style={[styles.backButton, { borderColor: dividerColor }]}>
             <Text style={[styles.backText, { color: textColor }]}>← VOLTAR</Text>
@@ -170,7 +175,16 @@ const MarcadorScreen: React.FC<MarcadorScreenProps> = ({ onBack }) => {
 
         <View style={styles.mainArea}>
           <View style={[styles.teamSide, { borderRightColor: dividerColor }]}> 
-            <View style={styles.overlayInfo}>
+            <View
+              pointerEvents="box-none"
+              style={[
+                styles.overlayInfo,
+                {
+                  width: nameInputWidth,
+                  transform: [{ translateX: -(nameInputWidth / 2) }],
+                },
+              ]}
+            >
               <TextInput
                 style={[
                   styles.teamInput,
@@ -184,11 +198,19 @@ const MarcadorScreen: React.FC<MarcadorScreenProps> = ({ onBack }) => {
                 value={state.teamAName}
                 onChangeText={(value) => updateTeamName('A', value)}
                 onBlur={() => normalizeTeamName('A')}
-                maxLength={18}
                 autoCapitalize="characters"
                 selectionColor={colors.primary}
               />
-              <Text style={[styles.scoreText, { color: textColor, fontSize: scoreFontSize, textShadowColor: scoreShadow }]}>{state.teamAScore}</Text>
+              <View pointerEvents="none">
+                <Text
+                  style={[
+                    styles.scoreText,
+                    { color: textColor, fontSize: scoreFontSize, textShadowColor: scoreShadow },
+                  ]}
+                >
+                  {state.teamAScore}
+                </Text>
+              </View>
             </View>
 
             <TouchableOpacity
@@ -207,7 +229,16 @@ const MarcadorScreen: React.FC<MarcadorScreenProps> = ({ onBack }) => {
           </View>
 
           <View style={styles.teamSide}>
-            <View style={styles.overlayInfo}>
+            <View
+              pointerEvents="box-none"
+              style={[
+                styles.overlayInfo,
+                {
+                  width: nameInputWidth,
+                  transform: [{ translateX: -(nameInputWidth / 2) }],
+                },
+              ]}
+            >
               <TextInput
                 style={[
                   styles.teamInput,
@@ -221,11 +252,19 @@ const MarcadorScreen: React.FC<MarcadorScreenProps> = ({ onBack }) => {
                 value={state.teamBName}
                 onChangeText={(value) => updateTeamName('B', value)}
                 onBlur={() => normalizeTeamName('B')}
-                maxLength={18}
                 autoCapitalize="characters"
                 selectionColor={colors.primary}
               />
-              <Text style={[styles.scoreText, { color: textColor, fontSize: scoreFontSize, textShadowColor: scoreShadow }]}>{state.teamBScore}</Text>
+              <View pointerEvents="none">
+                <Text
+                  style={[
+                    styles.scoreText,
+                    { color: textColor, fontSize: scoreFontSize, textShadowColor: scoreShadow },
+                  ]}
+                >
+                  {state.teamBScore}
+                </Text>
+              </View>
             </View>
 
             <TouchableOpacity
@@ -305,8 +344,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '10%',
     left: '50%',
-    transform: [{ translateX: -95 }],
-    width: 190,
     alignItems: 'center',
     zIndex: 5,
   },
@@ -316,7 +353,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     textAlign: 'center',
     fontWeight: '700',
-    paddingVertical: 2,
+    paddingVertical: 4,
     paddingHorizontal: 8,
   },
   scoreText: {

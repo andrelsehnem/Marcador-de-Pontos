@@ -1,9 +1,9 @@
 {
   "name": "marcador-de-baralho",
-  "version": "2.0.14",
+  "version": "2.0.16",
   "description": "Acompanhe suas mãos e jogadas",
   "scripts": {
-    "start": "expo start",
+    "dev": "expo start",
     "startClear": "expo start --clear",
     "web": "expo start --web",
     "build:web": "expo export -p web && node scripts/sync-head.js && node scripts/inject-adsense.js && node scripts/generate-seo-files.js",

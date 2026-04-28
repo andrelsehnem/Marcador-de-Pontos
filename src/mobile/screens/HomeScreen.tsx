@@ -62,7 +62,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco, onOpenCacheta, onO
       </TouchableOpacity>
 
       <View style={styles.content}>
-        <Text style={[styles.title, { color: textColor }]}>Marcador de baralho</Text>
+        <Text style={[styles.title, { color: textColor }]}>Marcador de pontos</Text>
         <Text style={[styles.subtitle, { color: subtitleColor }]}>
           Acompanhe suas mãos e jogadas com facilidade!
         </Text>

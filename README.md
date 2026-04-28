@@ -1,6 +1,6 @@
-# Marcador de Baralho
+# Marcador de Pontos
 
-App em React Native + Expo (com suporte Web) para marcação de pontos em jogos de baralho.
+App em React Native + Expo (com suporte Web) para marcação de pontos em jogos de baralho e no geral.
 
 ## Build Android para Play Store (AAB)
 

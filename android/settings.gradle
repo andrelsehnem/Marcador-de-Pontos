@@ -31,7 +31,7 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
 }
 expoAutolinking.useExpoModules()
 
-rootProject.name = 'Marcador de Baralho'
+rootProject.name = 'Marcador de Pontos'
 
 expoAutolinking.useExpoVersionCatalog()
 

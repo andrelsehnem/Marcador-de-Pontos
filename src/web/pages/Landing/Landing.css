@@ -250,6 +250,7 @@
   position: relative;
   width: 260px;
   height: 340px;
+  user-select: none; 
 }
 .fan-card {
   position: absolute;
@@ -373,6 +374,25 @@
   box-shadow: 0 20px 56px rgba(0,0,0,0.5), 0 0 40px rgba(201,168,76,0.07);
 }
 .cta-card-clickable { cursor: pointer; }
+.cta-card-featured {
+  border-color: rgba(201,168,76,0.45);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.45), 0 0 32px rgba(201,168,76,0.15);
+  position: relative;
+}
+.cta-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Lato', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #080C18;
+  background: linear-gradient(135deg, #C9A84C 0%, #E8C96A 100%);
+  border-radius: 999px;
+  padding: 6px 10px;
+  margin-bottom: 14px;
+}
 .cta-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
 .cta-card-icon { font-size: 38px; line-height: 1; }
 .cta-card-title {
@@ -462,6 +482,51 @@
 .feature-text { color: #F0EDE6; font-size: 17px; font-weight: 700; letter-spacing: 0.1px; }
 .feature-desc { color: rgba(240,237,230,0.58); font-size: 14px; line-height: 1.65; }
 
+/* == App sticky CTA ======================================================== */
+.app-sticky-cta {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 30;
+  width: min(92vw, 620px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(15,21,37,0.95);
+  border: 1px solid rgba(201,168,76,0.35);
+  box-shadow: 0 10px 36px rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px);
+  animation: revealUp 0.25s ease-out both;
+}
+.app-sticky-text {
+  color: #F0EDE6;
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+.app-sticky-button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #C9A84C 0%, #E8C96A 100%);
+  color: #080C18;
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+.app-sticky-button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+
 /* == Responsive ============================================================= */
 @media (max-width: 860px) {
   .hero-inner { grid-template-columns: 1fr; text-align: center; gap: 40px; }
@@ -492,6 +557,18 @@
   .stat-sep { display: none; }
   .stat { padding: 8px 16px; }
   .stats-bar { flex-wrap: wrap; gap: 0; }
+  .app-sticky-cta {
+    bottom: 10px;
+    width: calc(100vw - 20px);
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  .app-sticky-text { font-size: 12px; }
+  .app-sticky-button {
+    font-size: 12px;
+    padding: 8px 12px;
+    white-space: nowrap;
+  }
 }
 
 /* == Reduced motion ========================================================= */
