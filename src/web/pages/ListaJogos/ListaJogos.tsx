@@ -36,30 +36,44 @@ const ListaJogos: React.FC<{ onNavigate: (page: string) => void }> = ({ onNaviga
           </p>
         </header>
 
-        <section className="lista-grid" aria-label="Ações de jogos">
-          <button className="lista-card card-gold" onClick={() => onNavigate('truco')}>
-            <div className="lista-card-icon">🎯</div>
-            <div className="lista-card-title">Truco</div>
-            <div className="lista-card-text">Abrir marcador de pontos</div>
-          </button>
+        <section className="lista-group" aria-label="Seção de jogos">
+          <h2 className="lista-group-title">Jogos</h2>
+          <div className="lista-grid">
+            <button className="lista-card card-gold" onClick={() => onNavigate('truco')}>
+              <div className="lista-card-icon">🎯</div>
+              <div className="lista-card-title">Truco</div>
+              <div className="lista-card-text">Abrir marcador de pontos</div>
+            </button>
 
-          <button className="lista-card card-blue" onClick={() => onNavigate('cacheta')}>
-            <div className="lista-card-icon">🃏</div>
-            <div className="lista-card-title">Cacheta</div>
-            <div className="lista-card-text">Abrir marcador de pontos</div>
-          </button>
+            <button className="lista-card card-blue" onClick={() => onNavigate('cacheta')}>
+              <div className="lista-card-icon">🃏</div>
+              <div className="lista-card-title">Cacheta</div>
+              <div className="lista-card-text">Abrir marcador de pontos</div>
+            </button>
 
-          <button className="lista-card card-outline" onClick={() => onNavigate('como-jogar-truco')}>
-            <div className="lista-card-icon">📘</div>
-            <div className="lista-card-title">Como jogar Truco</div>
-            <div className="lista-card-text">Regras e dicas rápidas</div>
-          </button>
+            <button className="lista-card card-blue" onClick={() => onNavigate('marcador')}>
+              <div className="lista-card-icon">🧮</div>
+              <div className="lista-card-title">Marcador Livre</div>
+              <div className="lista-card-text">Equipe A x Equipe B com +1 e -1</div>
+            </button>
+          </div>
+        </section>
 
-          <button className="lista-card card-outline" onClick={() => onNavigate('como-jogar-cacheta')}>
-            <div className="lista-card-icon">📗</div>
-            <div className="lista-card-title">Como jogar Cacheta</div>
-            <div className="lista-card-text">Regras e dicas rápidas</div>
-          </button>
+        <section className="lista-group" aria-label="Seção de como jogar">
+          <h2 className="lista-group-title">Como jogar</h2>
+          <div className="lista-grid">
+            <button className="lista-card card-outline" onClick={() => onNavigate('como-jogar-truco')}>
+              <div className="lista-card-icon">📘</div>
+              <div className="lista-card-title">Como jogar Truco</div>
+              <div className="lista-card-text">Regras e dicas rápidas</div>
+            </button>
+
+            <button className="lista-card card-outline" onClick={() => onNavigate('como-jogar-cacheta')}>
+              <div className="lista-card-icon">📗</div>
+              <div className="lista-card-title">Como jogar Cacheta</div>
+              <div className="lista-card-text">Regras e dicas rápidas</div>
+            </button>
+          </div>
         </section>
 
         <div className="lista-section-toggle">

@@ -14,9 +14,10 @@ import { usePurchase } from '../../shared/contexts/PurchaseContext';
 interface HomeScreenProps {
   onOpenTruco: () => void;
   onOpenCacheta: () => void;
+  onOpenMarcador: () => void;
 }
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco, onOpenCacheta }) => {
+const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco, onOpenCacheta, onOpenMarcador }) => {
   const { theme, toggleTheme, colors } = useTheme();
   const { showInterstitialAd } = useInterstitialAd();
   const { refreshPurchaseStatus } = usePurchase();
@@ -39,6 +40,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco, onOpenCacheta }) =
   const handleOpenCacheta = async () => {
     await showInterstitialAd();
     onOpenCacheta();
+  };
+
+  const handleOpenMarcador = async () => {
+    await showInterstitialAd();
+    onOpenMarcador();
   };
 
   return (
@@ -71,6 +77,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco, onOpenCacheta }) =
             borderColor: primaryColor 
           }]} onPress={handleOpenCacheta}>
             <Text style={[styles.buttonTextSecondary, { color: primaryColor }]}>Cacheta</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.button, styles.secondaryButton, { 
+            backgroundColor: bgColor,
+            borderColor: primaryColor 
+          }]} onPress={handleOpenMarcador}>
+            <Text style={[styles.buttonTextSecondary, { color: primaryColor }]}>Marcador Livre</Text>
           </TouchableOpacity>
 
           <TouchableOpacity 

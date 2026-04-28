@@ -48,6 +48,13 @@ const routes = [
     description: 'Controle pontos do Truco com placar rápido, rodadas de 1, 3, 6 e 12 e salvamento local automático.',
   },
   {
+    path: '/marcador',
+    changefreq: 'weekly',
+    priority: '0.8',
+    title: 'Marcador de Pontos Livre | Equipe A e B',
+    description: 'Use um marcador de pontos livre para Equipe A e B com +1 e -1, nomes editáveis e salvamento automático.',
+  },
+  {
     path: '/como-jogar-truco',
     changefreq: 'monthly',
     priority: '0.7',
