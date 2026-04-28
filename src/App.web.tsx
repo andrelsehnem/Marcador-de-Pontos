@@ -8,10 +8,11 @@ const ListaJogos = lazy(() => import('./web/pages/ListaJogos/ListaJogos'));
 const Landing = lazy(() => import('./web/pages/Landing/Landing'));
 const Cacheta = lazy(() => import('./web/pages/Cacheta/Cacheta'));
 const Truco = lazy(() => import('./web/pages/Truco/Truco'));
+const Marcador = lazy(() => import('./web/pages/Marcador/Marcador'));
 const ComoJogarTruco = lazy(() => import('./web/pages/ComoJogarTruco/ComoJogarTruco'));
 const ComoJogarCacheta = lazy(() => import('./web/pages/ComoJogarCacheta/ComoJogarCacheta'));
 
-type WebPage = 'landing' | 'listajogos' | 'truco' | 'cacheta' | 'como-jogar-truco' | 'como-jogar-cacheta';
+type WebPage = 'landing' | 'listajogos' | 'truco' | 'cacheta' | 'marcador' | 'como-jogar-truco' | 'como-jogar-cacheta';
 
 const CANONICAL_SITE_URL = 'https://marcadordepontos.com.br';
 
@@ -30,6 +31,11 @@ const SEO_BY_PAGE: Record<WebPage, { title: string; description: string; path: s
     title: 'Marcador de Truco Online',
     description: 'Controle pontos do Truco com placar rápido, rodadas de 1, 3, 6 e 12 e salvamento local automático.',
     path: '/truco',
+  },
+  marcador: {
+    title: 'Marcador de Pontos Livre | Equipe A e B',
+    description: 'Use um marcador de pontos livre para Equipe A e B com +1 e -1, nomes editáveis e salvamento automático.',
+    path: '/marcador',
   },
   'como-jogar-truco': {
     title: 'Como Jogar Truco | Guia Rápido para Iniciantes',
@@ -95,6 +101,7 @@ export default function App() {
       if (path === '/listajogos') setCurrentPage('listajogos');
       else if (path === '/cacheta') setCurrentPage('cacheta');
       else if (path === '/truco') setCurrentPage('truco');
+      else if (path === '/marcador') setCurrentPage('marcador');
       else if (path === '/como-jogar-truco') setCurrentPage('como-jogar-truco');
       else if (path === '/como-jogar-cacheta') setCurrentPage('como-jogar-cacheta');
       else setCurrentPage('landing');
@@ -136,6 +143,7 @@ export default function App() {
             {currentPage === 'landing' && <Landing onNavigate={navigateTo} />}
             {currentPage === 'listajogos' && <ListaJogos onNavigate={navigateTo} />}
             {currentPage === 'truco' && <Truco onBack={() => navigateTo('listajogos')} />}
+            {currentPage === 'marcador' && <Marcador onBack={() => navigateTo('listajogos')} />}
             {currentPage === 'como-jogar-truco' && (
               <ComoJogarTruco
                 onBack={() => navigateTo('listajogos')}
