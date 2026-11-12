@@ -3,8 +3,6 @@ import { ArrowLeft } from 'lucide-react';
 import './ComoJogarTruco.css';
 import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
 import { useThemeStyles } from '../../../shared/hooks/useThemeStyles';
-import { AdsterraSlot } from '../../../shared/components/Adsterra/Adsterra';
-import { useResponsive } from '../../../shared/hooks/useResponsive';
 
 
 interface ComoJogarTrucoProps {
@@ -14,7 +12,6 @@ interface ComoJogarTrucoProps {
 
 const ComoJogarTruco: React.FC<ComoJogarTrucoProps> = ({ onBack, onPlayTruco }) => {
   const themeStyles = useThemeStyles();
-  const { isDesktop } = useResponsive();
 
   return (
     <div
@@ -219,11 +216,6 @@ const ComoJogarTruco: React.FC<ComoJogarTrucoProps> = ({ onBack, onPlayTruco }) 
             Ir para o marcador de Truco
           </button>
         </main>
-        {isDesktop && (
-          <aside className="como-jogar-truco-sidebar">
-            <AdsterraSlot placement="banner120x600Web" />
-          </aside>
-        )}
       </div>
     </div>
   );

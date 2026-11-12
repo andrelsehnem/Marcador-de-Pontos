@@ -48,21 +48,10 @@
   padding: 0 0 56px;
 }
 
-.como-jogar-cacheta-sidebar {
-  flex-shrink: 0;
-  width: 160px;
-  position: sticky;
-  top: 20px;
-  align-self: flex-start;
-}
-
 @media (max-width: 1024px) {
   .como-jogar-cacheta-layout {
     flex-direction: column;
     padding: 0 16px;
-  }
-  .como-jogar-cacheta-sidebar {
-    display: none;
   }
 }
 

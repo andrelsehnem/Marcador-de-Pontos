@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Landing.css';
+import AppPromo, { abrirPlayStore } from '../../../shared/components/AppPromo/AppPromo';
 
 const CARDS: { suit: string; red: boolean }[] = [
   { suit: '♠', red: false },
@@ -10,12 +11,11 @@ const CARDS: { suit: string; red: boolean }[] = [
 
 const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => {
   type Star = { id: number; left: number; top: number; delay: number; size: number };
-  const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=dev.andre100.marcadorPontos';
   const [stars, setStars] = useState<Star[]>([]);
   const [showAppSticky, setShowAppSticky] = useState(false);
 
   const openPlayStore = () => {
-    window.open(PLAY_STORE_URL, '_blank', 'noopener,noreferrer');
+    abrirPlayStore('home');
   };
 
   const scrollToStatsBar = () => {
@@ -48,6 +48,7 @@ const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => 
 
   return (
     <div className="landing-page">
+      <AppPromo variante="faixa" origem="home-faixa" />
 
       {/* Estrelas douradas */}
       <div className="stars" aria-hidden="true">
@@ -123,7 +124,7 @@ const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => 
       {/* ── Stats bar ────────────────────────────── */}
       <div id="stats-bar" className="stats-bar">
         <div className="stat">
-          <span className="stat-num">3</span>
+          <span className="stat-num">4</span>
           <span className="stat-label">Jogos disponíveis</span>
         </div>
         <div className="stat-sep" aria-hidden="true">◆</div>

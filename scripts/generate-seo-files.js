@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { renderPage } = require('./prerender');
 
 const distDir = path.join(__dirname, '../dist');
 const distIndexPath = path.join(distDir, 'index.html');
@@ -75,7 +76,43 @@ const routes = [
     title: 'Como Jogar Cacheta | Regras e Estratégias',
     description: 'Aprenda como jogar Cacheta com regras básicas, combinações e dicas práticas para iniciantes e intermediários.',
   },
+  {
+    path: '/canastra',
+    changefreq: 'weekly',
+    priority: '0.8',
+    title: 'Marcador de Canastra Online',
+    description: 'Marque pontos de Canastra com 2 times, configurações personalizáveis e histórico editável. Salva automaticamente.',
+  },
+  {
+    path: '/sobre',
+    changefreq: 'monthly',
+    priority: '0.4',
+    title: 'Sobre | Marcador de Pontos',
+    description: 'Conheça o Marcador de Pontos: marcadores gratuitos de Truco, Cacheta e Canastra no navegador e no app Android.',
+  },
+  {
+    path: '/politica-de-privacidade',
+    changefreq: 'monthly',
+    priority: '0.3',
+    title: 'Política de Privacidade | Marcador de Pontos',
+    description: 'Saiba quais dados o Marcador de Pontos trata, como usamos cookies, estatísticas e anúncios, e quais são os seus direitos.',
+  },
+  {
+    path: '/contato',
+    changefreq: 'monthly',
+    priority: '0.4',
+    title: 'Contato | Marcador de Pontos',
+    description: 'Fale com o Marcador de Pontos para tirar dúvidas, relatar problemas ou sugerir novos jogos.',
+  },
 ];
+
+// Servida pela Vercel com status 404 para endereços inexistentes; fica fora do sitemap.
+const notFoundRoute = {
+  path: '/404',
+  title: 'Página não encontrada | Marcador de Pontos',
+  description: 'O endereço acessado não existe. Volte para a página inicial ou escolha um marcador na lista de jogos.',
+  noindex: true,
+};
 
 if (!fs.existsSync(distIndexPath)) {
   console.log('❌ Arquivo dist/index.html não encontrado. Rode o build antes de gerar páginas SEO.');
@@ -126,7 +163,8 @@ function ensureStylesheets(html, hrefs) {
 
   for (const href of hrefs) {
     const escapedHref = escapeRegExp(href);
-    const linkPattern = new RegExp(`<link\\b[^>]*href=["']${escapedHref}["'][^>]*>`, 'i');
+    // Exige rel="stylesheet": um <link rel="preload"> com o mesmo href não aplica o CSS.
+    const linkPattern = new RegExp(`<link\\b(?=[^>]*rel=["']stylesheet["'])[^>]*href=["']${escapedHref}["'][^>]*>`, 'i');
 
     if (!linkPattern.test(updatedHtml)) {
       updatedHtml = updatedHtml.replace('</head>', `    <link rel="stylesheet" href="${href}">\n</head>`);
@@ -136,34 +174,62 @@ function ensureStylesheets(html, hrefs) {
   return updatedHtml;
 }
 
-function buildRouteHtml(route) {
+const pageFromPath = (routePath) =>
+  routePath === '/' ? 'landing' : routePath === '/404' ? 'nao-encontrada' : routePath.replace(/^\//, '');
+
+// Coloca o HTML da página dentro de #root para o conteúdo existir sem depender de JavaScript.
+async function injectPrerenderedContent(html, route) {
+  try {
+    const content = await renderPage(pageFromPath(route.path));
+    const rootPattern = /<div id="root"><\/div>/;
+
+    if (!rootPattern.test(html)) {
+      console.log(`⚠️ <div id="root"> não encontrado; ${route.path} ficou sem pré-renderização.`);
+      return html;
+    }
+
+    return html.replace(rootPattern, () => `<div id="root">${content}</div>`);
+  } catch (error) {
+    console.log(`⚠️ Falha ao pré-renderizar ${route.path}: ${error.message}`);
+    return html;
+  }
+}
+
+async function buildRouteHtml(route) {
   const canonicalUrl = `${baseUrl}${route.path}`;
   let html = templateHtml;
 
   html = ensureStylesheets(html, stylesheetHrefs);
   html = html.replace(/<title[\s\S]*?<\/title>/i, `<title>${route.title}</title>`);
   html = upsertMetaTag(html, 'name', 'description', route.description);
-  html = upsertMetaTag(html, 'name', 'robots', 'index,follow');
+  html = upsertMetaTag(html, 'name', 'robots', route.noindex ? 'noindex' : 'index,follow');
+  html = upsertMetaTag(html, 'name', 'google-adsense-account', 'ca-pub-7478664676745892');
   html = upsertMetaTag(html, 'property', 'og:title', route.title);
   html = upsertMetaTag(html, 'property', 'og:description', route.description);
   html = upsertMetaTag(html, 'property', 'og:type', 'website');
   html = upsertMetaTag(html, 'property', 'og:url', canonicalUrl);
-  html = upsertCanonical(html, canonicalUrl);
-
-  return html;
-}
-
-for (const route of routes) {
-  const routeHtml = buildRouteHtml(route);
-
-  if (route.path === '/') {
-    fs.writeFileSync(path.join(distDir, 'index.html'), routeHtml, 'utf8');
-    continue;
+  if (!route.noindex) {
+    html = upsertCanonical(html, canonicalUrl);
   }
 
-  const routeDir = path.join(distDir, route.path.replace(/^\//, ''));
-  fs.mkdirSync(routeDir, { recursive: true });
-  fs.writeFileSync(path.join(routeDir, 'index.html'), routeHtml, 'utf8');
+  return injectPrerenderedContent(html, route);
+}
+
+async function writeRoutePages() {
+  for (const route of routes) {
+    const routeHtml = await buildRouteHtml(route);
+
+    if (route.path === '/') {
+      fs.writeFileSync(path.join(distDir, 'index.html'), routeHtml, 'utf8');
+      continue;
+    }
+
+    const routeDir = path.join(distDir, route.path.replace(/^\//, ''));
+    fs.mkdirSync(routeDir, { recursive: true });
+    fs.writeFileSync(path.join(routeDir, 'index.html'), routeHtml, 'utf8');
+  }
+
+  fs.writeFileSync(path.join(distDir, '404.html'), await buildRouteHtml(notFoundRoute), 'utf8');
 }
 
 const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -200,4 +266,11 @@ if (fs.existsSync(appAdsSource)) {
   console.log('⚠️ app-ads.txt não encontrado na raiz do projeto.');
 }
 
-console.log(`✅ páginas SEO, sitemap.xml e robots.txt gerados em dist/ (base: ${baseUrl})`);
+writeRoutePages()
+  .then(() => {
+    console.log(`✅ páginas SEO, sitemap.xml e robots.txt gerados em dist/ (base: ${baseUrl})`);
+  })
+  .catch((error) => {
+    console.error('❌ Falha ao gerar páginas SEO:', error);
+    process.exit(1);
+  });

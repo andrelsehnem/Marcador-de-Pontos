@@ -1,8 +1,6 @@
 import React, { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useTheme } from '../../../shared/contexts/ThemeContext';
-import { useResponsive } from '../../../shared/hooks/useResponsive';
 import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
-import { AdsterraSlot } from '../../../shared/components/Adsterra/Adsterra';
 import { CanastraConfig, CanastraGame, DEFAULT_CONFIG, DEFAULT_GAME, Score } from './types';
 import './Canastra.css';
 
@@ -61,7 +59,6 @@ const formatSigned = (value: number): string => `${value > 0 ? '+' : ''}${value}
 
 const Canastra: React.FC<CanastraProps> = ({ onNavigate }) => {
   const { appearance } = useTheme();
-  const { isDesktop } = useResponsive();
   const [game, setGame] = useState<CanastraGame>(loadGame);
   const [showConfigModal, setShowConfigModal] = useState(
     () => game.vencedor === null && game.pontosTime1.length === 0 && game.pontosTime2.length === 0
@@ -247,7 +244,6 @@ const Canastra: React.FC<CanastraProps> = ({ onNavigate }) => {
           <div className="canastra-modal-actions"><button className="canastra-btn-secondary" onClick={() => setShowFinishModal(false)}>Ver placar</button><button className="canastra-btn-primary" onClick={startNewGame}>Nova partida</button></div>
         </div></div>
       )}
-      {isDesktop && <AdsterraSlot placement="nativeBannerWeb" style={{ margin: '6px auto', maxWidth: 960, padding: '0 12px', boxSizing: 'border-box' }} />}
     </div>
   );
 };

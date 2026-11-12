@@ -58,8 +58,44 @@
       "destination": "/como-jogar-cacheta/index.html"
     },
     {
-      "source": "/((?!.*\\..*).*)",
-      "destination": "/index.html"
+      "source": "/marcador",
+      "destination": "/marcador/index.html"
+    },
+    {
+      "source": "/marcador/",
+      "destination": "/marcador/index.html"
+    },
+    {
+      "source": "/canastra",
+      "destination": "/canastra/index.html"
+    },
+    {
+      "source": "/canastra/",
+      "destination": "/canastra/index.html"
+    },
+    {
+      "source": "/sobre",
+      "destination": "/sobre/index.html"
+    },
+    {
+      "source": "/sobre/",
+      "destination": "/sobre/index.html"
+    },
+    {
+      "source": "/politica-de-privacidade",
+      "destination": "/politica-de-privacidade/index.html"
+    },
+    {
+      "source": "/politica-de-privacidade/",
+      "destination": "/politica-de-privacidade/index.html"
+    },
+    {
+      "source": "/contato",
+      "destination": "/contato/index.html"
+    },
+    {
+      "source": "/contato/",
+      "destination": "/contato/index.html"
     }
   ],
   "headers": [

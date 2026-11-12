@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './Cacheta.css';
 import { useThemeStyles } from '../../../shared/hooks/useThemeStyles';
 import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
-import { AdsterraSlot } from '../../../shared/components/Adsterra/Adsterra';
-import { useResponsive } from '../../../shared/hooks/useResponsive';
 
 
 interface Player {
@@ -20,7 +18,6 @@ interface CachetaStorageData {
 
 const Cacheta: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     const themeStyles = useThemeStyles();
-    const { isDesktop } = useResponsive();
     const [expandContent, setExpandContent] = useState(false);
     const [players, setPlayers] = useState<Player[]>([
         { id: 1, name: 'Jogador 1', score: 10 },
@@ -477,12 +474,6 @@ const Cacheta: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                   <li><strong>Bata na hora certa:</strong> Ter 2-3 combinações já é o suficiente para bater em muitas mesas</li>
                 </ul>
               </div>
-            )}
-            {isDesktop && (
-              <AdsterraSlot
-                placement="nativeBannerWeb"
-                style={{ margin: '8px auto', maxWidth: 960, padding: '0 12px', boxSizing: 'border-box' }}
-              />
             )}
         </div>
     );
