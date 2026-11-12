@@ -5,7 +5,7 @@ import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
 import { useThemeStyles } from '../../../shared/hooks/useThemeStyles';
 import { PLAY_STORE_URL } from '../../../shared/components/AppPromo/AppPromo';
 
-export type PaginaInstitucional = 'sobre' | 'politica-de-privacidade' | 'contato' | 'nao-encontrada';
+export type PaginaInstitucional = 'sobre' | 'politica-de-privacidade' | 'contato';
 
 const EMAIL_CONTATO = 'andrelsehnem@gmail.com';
 const SITE_DESENVOLVEDOR = 'https://andre100.dev';
@@ -174,20 +174,7 @@ const Contato: React.FC = () => (
   </>
 );
 
-const NaoEncontrada: React.FC = () => (
-  <section>
-    <p>O endereço que você abriu não existe ou foi alterado. Veja por onde continuar:</p>
-    <ul>
-      <li><a href="/">Página inicial</a></li>
-      <li><a href="/listajogos">Lista de jogos e marcadores</a></li>
-      <li><a href="/como-jogar-truco">Como jogar Truco</a></li>
-      <li><a href="/como-jogar-cacheta">Como jogar Cacheta</a></li>
-    </ul>
-  </section>
-);
-
 const TITULOS: Record<PaginaInstitucional, string> = {
-  'nao-encontrada': 'Página não encontrada',
   sobre: 'Sobre o Marcador de Pontos',
   'politica-de-privacidade': 'Política de Privacidade',
   contato: 'Contato',
@@ -219,7 +206,6 @@ const Institucional: React.FC<InstitucionalProps> = ({ pagina, onBack }) => {
         {pagina === 'sobre' && <Sobre />}
         {pagina === 'politica-de-privacidade' && <Privacidade />}
         {pagina === 'contato' && <Contato />}
-        {pagina === 'nao-encontrada' && <NaoEncontrada />}
       </main>
     </div>
   );

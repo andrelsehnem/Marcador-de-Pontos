@@ -13,6 +13,7 @@ const Canastra = lazy(() => import('./web/pages/Canastra/Canastra'));
 const ComoJogarTruco = lazy(() => import('./web/pages/ComoJogarTruco/ComoJogarTruco'));
 const ComoJogarCacheta = lazy(() => import('./web/pages/ComoJogarCacheta/ComoJogarCacheta'));
 const Institucional = lazy(() => import('./web/pages/Institucional/Institucional'));
+const NaoEncontrada = lazy(() => import('./web/pages/NaoEncontrada/NaoEncontrada'));
 
 type WebPage = 'landing' | 'listajogos' | 'truco' | 'cacheta' | 'marcador' | 'canastra' | 'como-jogar-truco' | 'como-jogar-cacheta' | 'sobre' | 'politica-de-privacidade' | 'contato' | 'nao-encontrada';
 
@@ -194,9 +195,10 @@ export default function App({ initialPage }: { initialPage?: WebPage }) {
               />
             )}
             {currentPage === 'cacheta' && <Cacheta onBack={() => navigateTo('listajogos')} />}
-            {(currentPage === 'sobre' || currentPage === 'politica-de-privacidade' || currentPage === 'contato' || currentPage === 'nao-encontrada') && (
+            {(currentPage === 'sobre' || currentPage === 'politica-de-privacidade' || currentPage === 'contato') && (
               <Institucional pagina={currentPage} onBack={() => navigateTo('landing')} />
             )}
+            {currentPage === 'nao-encontrada' && <NaoEncontrada onNavigate={navigateToTop} />}
           </Suspense>
         </main>
         <Footer onNavigate={navigateToTop} fixo={currentPage === 'landing'} />
