@@ -1,0 +1,301 @@
+.nf-page {
+  min-height: calc(100vh - 52px);
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #080c18;
+  background-image:
+    radial-gradient(ellipse 65% 50% at 12% 8%, rgba(201, 168, 76, 0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 45% at 88% 92%, rgba(59, 67, 179, 0.12) 0%, transparent 58%);
+  color: #f0ede6;
+  padding: 40px 20px;
+  overflow: hidden;
+}
+
+.nf-stars,
+.nf-naipes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.nf-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 999px;
+  background: #e8c96a;
+  opacity: 0.55;
+  animation: nfTwinkle 3.2s ease-in-out infinite;
+}
+
+.nf-naipe {
+  position: absolute;
+  font-size: clamp(56px, 9vw, 120px);
+  line-height: 1;
+  color: rgba(201, 168, 76, 0.07);
+  animation: nfDrift 9s ease-in-out infinite;
+  user-select: none;
+}
+
+.nf-naipe-1 { left: 6%; top: 10%; }
+.nf-naipe-2 { right: 8%; top: 14%; animation-delay: -2s; color: rgba(214, 69, 69, 0.08); }
+.nf-naipe-3 { left: 12%; bottom: 10%; animation-delay: -4s; color: rgba(214, 69, 69, 0.08); }
+.nf-naipe-4 { right: 10%; bottom: 12%; animation-delay: -6s; }
+.nf-naipe-5 { left: 44%; top: 4%; animation-delay: -3s; font-size: clamp(36px, 5vw, 64px); color: rgba(214, 69, 69, 0.06); }
+.nf-naipe-6 { right: 38%; bottom: 3%; animation-delay: -5s; font-size: clamp(36px, 5vw, 64px); }
+
+.nf-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 640px;
+  text-align: center;
+}
+
+/* Mão de cartas formando o 404 */
+.nf-mao {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 34px;
+}
+
+.nf-carta-slot {
+  margin: 0 -8px;
+  animation: nfDeal 0.7s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+.nf-carta-slot-1 { transform: rotate(-12deg) translateY(10px); animation-delay: 0.05s; }
+.nf-carta-slot-2 { transform: translateY(-8px); z-index: 2; animation-delay: 0.2s; }
+.nf-carta-slot-3 { transform: rotate(12deg) translateY(10px); animation-delay: 0.35s; }
+
+.nf-carta {
+  position: relative;
+  width: clamp(88px, 22vw, 132px);
+  aspect-ratio: 5 / 7;
+  border-radius: 12px;
+  background: linear-gradient(160deg, #fffdf6 0%, #f1ead8 100%);
+  border: 1px solid rgba(201, 168, 76, 0.55);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.5), inset 0 0 0 4px rgba(201, 168, 76, 0.12);
+  color: #161b2e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: nfFloat 4.5s ease-in-out infinite;
+}
+
+.nf-carta-slot-2 .nf-carta { animation-delay: -1.5s; }
+.nf-carta-slot-3 .nf-carta { animation-delay: -3s; }
+
+.nf-carta-vermelha {
+  color: #c0392b;
+}
+
+.nf-carta-valor {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: clamp(48px, 12vw, 76px);
+  line-height: 1;
+}
+
+.nf-carta-canto {
+  position: absolute;
+  top: 7px;
+  left: 9px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: clamp(12px, 3vw, 16px);
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.nf-carta-canto small {
+  font-size: 0.95em;
+}
+
+.nf-carta-canto-inverso {
+  top: auto;
+  left: auto;
+  right: 9px;
+  bottom: 7px;
+  transform: rotate(180deg);
+}
+
+.nf-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 168, 76, 0.38);
+  background: rgba(201, 168, 76, 0.14);
+  color: #e8c96a;
+  font-size: 12px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 14px;
+  animation: nfRevealUp 0.7s ease-out 0.4s both;
+}
+
+.nf-title {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(30px, 5vw, 50px);
+  letter-spacing: -0.6px;
+  line-height: 1.12;
+  animation: nfRevealUp 0.7s ease-out 0.5s both;
+}
+
+.nf-title span {
+  background: linear-gradient(90deg, #c9a84c 0%, #e8c96a 45%, #c9a84c 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: nfShimmer 3s linear infinite;
+}
+
+.nf-subtitle {
+  margin: 14px auto 0;
+  max-width: 480px;
+  color: rgba(240, 237, 230, 0.72);
+  font-size: clamp(15px, 2vw, 18px);
+  line-height: 1.65;
+  animation: nfRevealUp 0.7s ease-out 0.6s both;
+}
+
+.nf-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 30px;
+  animation: nfRevealUp 0.7s ease-out 0.7s both;
+}
+
+.nf-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 12px 22px;
+  border-radius: 12px;
+  border: 1px solid rgba(201, 168, 76, 0.38);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f0ede6;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.nf-link:hover {
+  transform: translateY(-3px);
+  border-color: rgba(201, 168, 76, 0.6);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
+}
+
+.nf-link:focus-visible {
+  outline: 2px solid #e8c96a;
+  outline-offset: 3px;
+}
+
+.nf-link-primario {
+  border-color: transparent;
+  background: linear-gradient(135deg, #c9a84c 0%, #e8c96a 100%);
+  color: #080c18;
+}
+
+.nf-link-primario:hover {
+  background: linear-gradient(135deg, #d4b45a 0%, #f0d57e 100%);
+}
+
+@media (max-width: 520px) {
+  .nf-page {
+    padding: 28px 14px;
+  }
+
+  .nf-links {
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-star,
+  .nf-naipe,
+  .nf-carta-slot,
+  .nf-carta,
+  .nf-badge,
+  .nf-title,
+  .nf-title span,
+  .nf-subtitle,
+  .nf-links {
+    animation: none !important;
+  }
+}
+
+@keyframes nfTwinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes nfDrift {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(4deg);
+  }
+}
+
+@keyframes nfFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Só opacidade + deslocamento via `translate`, para não brigar com o `transform` do leque. */
+@keyframes nfDeal {
+  from {
+    opacity: 0;
+    translate: 0 -60px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes nfRevealUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes nfShimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
