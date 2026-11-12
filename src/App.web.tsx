@@ -3,9 +3,6 @@ import './web/styles/global.css';
 import { ThemeProvider } from './shared/contexts/ThemeContext';
 import Footer from './shared/components/Footer/Footer';
 import { Analytics } from '@vercel/analytics/react';
-import { AdsterraGlobal, AdsterraSlot } from './shared/components/Adsterra/Adsterra';
-import { useResponsive } from './shared/hooks/useResponsive';
-import { getAdsterraPagePlan } from './shared/constants/adsterra';
 
 const ListaJogos = lazy(() => import('./web/pages/ListaJogos/ListaJogos'));
 const Landing = lazy(() => import('./web/pages/Landing/Landing'));
@@ -15,8 +12,9 @@ const Marcador = lazy(() => import('./web/pages/Marcador/Marcador'));
 const Canastra = lazy(() => import('./web/pages/Canastra/Canastra'));
 const ComoJogarTruco = lazy(() => import('./web/pages/ComoJogarTruco/ComoJogarTruco'));
 const ComoJogarCacheta = lazy(() => import('./web/pages/ComoJogarCacheta/ComoJogarCacheta'));
+const Institucional = lazy(() => import('./web/pages/Institucional/Institucional'));
 
-type WebPage = 'landing' | 'listajogos' | 'truco' | 'cacheta' | 'marcador' | 'canastra' | 'como-jogar-truco' | 'como-jogar-cacheta';
+type WebPage = 'landing' | 'listajogos' | 'truco' | 'cacheta' | 'marcador' | 'canastra' | 'como-jogar-truco' | 'como-jogar-cacheta' | 'sobre' | 'politica-de-privacidade' | 'contato' | 'nao-encontrada';
 
 const CANONICAL_SITE_URL = 'https://marcadordepontos.com.br';
 
@@ -61,6 +59,32 @@ const SEO_BY_PAGE: Record<WebPage, { title: string; description: string; path: s
     description: 'Marque pontos de Canastra com 2 times, configurações personalizáveis e histórico editável. Salva automaticamente.',
     path: '/canastra',
   },
+  sobre: {
+    title: 'Sobre | Marcador de Pontos',
+    description: 'Conheça o Marcador de Pontos: marcadores gratuitos de Truco, Cacheta e Canastra no navegador e no app Android.',
+    path: '/sobre',
+  },
+  'politica-de-privacidade': {
+    title: 'Política de Privacidade | Marcador de Pontos',
+    description: 'Saiba quais dados o Marcador de Pontos trata, como usamos cookies, estatísticas e anúncios, e quais são os seus direitos.',
+    path: '/politica-de-privacidade',
+  },
+  contato: {
+    title: 'Contato | Marcador de Pontos',
+    description: 'Fale com o Marcador de Pontos para tirar dúvidas, relatar problemas ou sugerir novos jogos.',
+    path: '/contato',
+  },
+  'nao-encontrada': {
+    title: 'Página não encontrada | Marcador de Pontos',
+    description: 'O endereço acessado não existe. Volte para a página inicial ou escolha um marcador na lista de jogos.',
+    path: '/404',
+  },
+};
+
+const resolvePage = (pathname: string): WebPage => {
+  const path = pathname.replace(/\/$/, '') || '/';
+  const pages = Object.keys(SEO_BY_PAGE) as WebPage[];
+  return pages.find((page) => SEO_BY_PAGE[page].path === path) ?? 'nao-encontrada';
 };
 
 const upsertMetaTag = (attr: 'name' | 'property', key: string, value: string) => {
@@ -101,24 +125,15 @@ const upsertCanonical = (href: string) => {
   canonicalTag.setAttribute('href', href);
 };
 
-export default function App() {
-  const [currentPage, setCurrentPage] = useState<WebPage>('landing');
-  const { isMobile } = useResponsive();
+// `initialPage` só é passado na pré-renderização do build (scripts/prerender.js).
+export default function App({ initialPage }: { initialPage?: WebPage }) {
+  const [currentPage, setCurrentPage] = useState<WebPage>(
+    () => initialPage ?? resolvePage(window.location.pathname)
+  );
 
   useEffect(() => {
-    const handleRouteChange = () => {
-      const path = window.location.pathname.replace(/\/$/, '') || '/';
-      if (path === '/listajogos') setCurrentPage('listajogos');
-      else if (path === '/cacheta') setCurrentPage('cacheta');
-      else if (path === '/truco') setCurrentPage('truco');
-      else if (path === '/marcador') setCurrentPage('marcador');
-      else if (path === '/canastra') setCurrentPage('canastra');
-      else if (path === '/como-jogar-truco') setCurrentPage('como-jogar-truco');
-      else if (path === '/como-jogar-cacheta') setCurrentPage('como-jogar-cacheta');
-      else setCurrentPage('landing');
-    };
+    const handleRouteChange = () => setCurrentPage(resolvePage(window.location.pathname));
 
-    handleRouteChange();
     window.addEventListener('popstate', handleRouteChange);
     return () => window.removeEventListener('popstate', handleRouteChange);
   }, []);
@@ -127,17 +142,20 @@ export default function App() {
     const currentSeo = SEO_BY_PAGE[currentPage];
     const siteUrl = CANONICAL_SITE_URL;
     const canonicalUrl = `${siteUrl}${currentSeo.path}`;
+    const isNotFound = currentPage === 'nao-encontrada';
 
     document.title = currentSeo.title;
     upsertMetaTag('name', 'description', currentSeo.description);
-    upsertMetaTag('name', 'robots', 'index,follow');
+    upsertMetaTag('name', 'robots', isNotFound ? 'noindex' : 'index,follow');
     upsertMetaTag('property', 'og:title', currentSeo.title);
     upsertMetaTag('property', 'og:description', currentSeo.description);
     upsertMetaTag('property', 'og:type', 'website');
     upsertMetaTag('property', 'og:url', canonicalUrl);
     upsertMetaTag('name', 'google-adsense-account', 'ca-pub-7478664676745892');
     // Script já está no index.html, não precisa reinjetar aqui
-    upsertCanonical(canonicalUrl);
+    if (!isNotFound) {
+      upsertCanonical(canonicalUrl);
+    }
   }, [currentPage]);
 
   const navigateTo = (page: WebPage) => {
@@ -146,14 +164,16 @@ export default function App() {
     window.history.pushState({}, '', path);
   };
 
-  const adPlan = getAdsterraPagePlan(currentPage, isMobile ? 'webmobile' : 'web');
+  const navigateToTop = (page: WebPage) => {
+    navigateTo(page);
+    // No build web quem rola é o #root, não a janela.
+    document.getElementById('root')?.scrollTo(0, 0);
+    window.scrollTo(0, 0);
+  };
 
   return (
     <div style={{ width: '100%', minHeight: '100vh', margin: 0, padding: 0, display: 'flex', flexDirection: 'column' }}>
       <ThemeProvider>
-        {adPlan.globalPlacements.map((placement) => (
-          <AdsterraGlobal key={placement} placement={placement} />
-        ))}
         <main style={{ flex: 1 }}>
           <Suspense fallback={null}>
             {currentPage === 'landing' && <Landing onNavigate={navigateTo} />}
@@ -174,29 +194,12 @@ export default function App() {
               />
             )}
             {currentPage === 'cacheta' && <Cacheta onBack={() => navigateTo('listajogos')} />}
+            {(currentPage === 'sobre' || currentPage === 'politica-de-privacidade' || currentPage === 'contato' || currentPage === 'nao-encontrada') && (
+              <Institucional pagina={currentPage} onBack={() => navigateTo('landing')} />
+            )}
           </Suspense>
         </main>
-        {adPlan.contentPlacement && (
-          <AdsterraSlot
-            placement={adPlan.contentPlacement}
-            style={{
-              margin: '16px auto 0',
-              padding: '0 12px',
-              boxSizing: 'border-box',
-            }}
-          />
-        )}
-        {adPlan.footerPlacement && (
-          <AdsterraSlot
-            placement={adPlan.footerPlacement}
-            style={{
-              margin: '12px auto 0',
-              padding: '0 12px',
-              boxSizing: 'border-box',
-            }}
-          />
-        )}
-        <Footer />
+        <Footer onNavigate={navigateToTop} fixo={currentPage === 'landing'} />
       </ThemeProvider>
       <Analytics />
     </div>

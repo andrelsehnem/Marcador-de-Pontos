@@ -15,11 +15,12 @@ import { COLOR_THEMES } from '../../shared/constants/colors';
 interface HomeScreenProps {
   onOpenTruco: () => void;
   onOpenCacheta: () => void;
+  onOpenCanastra: () => void;
   onOpenMarcador: () => void;
   onOpenSettings: () => void;
 }
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco, onOpenCacheta, onOpenMarcador, onOpenSettings }) => {
+const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco, onOpenCacheta, onOpenCanastra, onOpenMarcador, onOpenSettings }) => {
   const { appearance, colorTheme, setColorTheme } = useTheme();
   const { showInterstitialAd } = useInterstitialAd();
   const { isPurchased, loading: purchaseStatusLoading, refreshPurchaseStatus } = usePurchase();
@@ -56,6 +57,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco, onOpenCacheta, onO
     onOpenMarcador();
   };
 
+  const handleOpenCanastra = async () => {
+    await showInterstitialAd();
+    onOpenCanastra();
+  };
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}>
       <View style={styles.content}>
@@ -74,6 +80,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenTruco, onOpenCacheta, onO
             borderColor: primaryColor 
           }]} onPress={handleOpenCacheta}>
             <Text style={[styles.buttonTextSecondary, { color: primaryColor }]}>Cacheta</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.button, styles.secondaryButton, {
+            backgroundColor: bgColor,
+            borderColor: primaryColor,
+          }]} onPress={handleOpenCanastra}>
+            <Text style={[styles.buttonTextSecondary, { color: primaryColor }]}>Canastra</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.button, styles.secondaryButton, { 

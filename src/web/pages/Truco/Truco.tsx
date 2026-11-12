@@ -3,13 +3,10 @@ import { RotateCcw, Menu, Clock, ArrowLeft } from 'lucide-react';
 import './Truco.css';
 import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
 import { useTheme } from '../../../shared/contexts/ThemeContext';
-import { AdsterraSlot } from '../../../shared/components/Adsterra/Adsterra';
-import { useResponsive } from '../../../shared/hooks/useResponsive';
 
 
 export default function TrucoPaulista({ onBack }: { onBack: () => void }) {
     const { theme } = useTheme();
-    const { isDesktop } = useResponsive();
     const [expandContent, setExpandContent] = useState(false);
     const [nosScore, setNosScore] = useState(() => {
         const saved = localStorage.getItem('truco-nosScore');
@@ -217,12 +214,6 @@ export default function TrucoPaulista({ onBack }: { onBack: () => void }) {
             </button>
 
             {/* Conteúdo educacional recolhível */}
-            {isDesktop && (
-              <AdsterraSlot
-                placement="nativeBannerWeb"
-                style={{ margin: '8px auto', maxWidth: 960, padding: '0 12px', boxSizing: 'border-box' }}
-              />
-            )}
             {expandContent && (
               <div style={{ 
                 maxWidth: '800px',

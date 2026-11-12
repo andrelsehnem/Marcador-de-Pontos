@@ -7,12 +7,13 @@ import { PurchaseProvider } from './shared/contexts/PurchaseContext';
 import HomeScreen from './mobile/screens/HomeScreen';
 import TrucoScreen from './mobile/screens/TrucoScreen';
 import CachetaScreen from './mobile/screens/CachetaScreen';
+import CanastraScreen from './mobile/screens/CanastraScreen';
 import MarcadorScreen from './mobile/screens/MarcadorScreen';
 import SettingsScreen from './mobile/screens/SettingsScreen';
 import { initializeAdMob } from './shared/services/admob';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'truco' | 'cacheta' | 'marcador' | 'settings'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'truco' | 'cacheta' | 'canastra' | 'marcador' | 'settings'>('home');
 
   // Manter a tela acordada enquanto o app estiver aberto (lock liberado ao desmontar)
   useKeepAwake();
@@ -31,12 +32,14 @@ export default function App() {
           <HomeScreen 
             onOpenTruco={() => setCurrentPage('truco')}
             onOpenCacheta={() => setCurrentPage('cacheta')}
+            onOpenCanastra={() => setCurrentPage('canastra')}
             onOpenMarcador={() => setCurrentPage('marcador')}
             onOpenSettings={() => setCurrentPage('settings')}
           />
         )}
         {currentPage === 'truco' && <TrucoScreen onBack={() => setCurrentPage('home')} />}
         {currentPage === 'cacheta' && <CachetaScreen onBack={() => setCurrentPage('home')} />}
+        {currentPage === 'canastra' && <CanastraScreen onBack={() => setCurrentPage('home')} />}
         {currentPage === 'marcador' && <MarcadorScreen onBack={() => setCurrentPage('home')} />}
         {currentPage === 'settings' && <SettingsScreen onBack={() => setCurrentPage('home')} />}
         </PurchaseProvider>

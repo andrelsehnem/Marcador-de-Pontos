@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import './ListaJogos.css';
 import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
-import { AdsterraSlot } from '../../../shared/components/Adsterra/Adsterra';
-import { useResponsive } from '../../../shared/hooks/useResponsive';
+import AppPromo from '../../../shared/components/AppPromo/AppPromo';
 
 const ListaJogos: React.FC<{ onNavigate: (page: string) => void }> = ({ onNavigate }) => {
   const [expandContent, setExpandContent] = useState(false);
-  const { isDesktop } = useResponsive();
 
   return (
     <div className="lista-page">
@@ -38,6 +36,8 @@ const ListaJogos: React.FC<{ onNavigate: (page: string) => void }> = ({ onNaviga
             Acesse os marcadores e guias de cada jogo em uma experiência rápida e elegante.
           </p>
         </header>
+
+        <AppPromo variante="card" origem="lista-jogos" />
 
         <section className="lista-group" aria-label="Seção de jogos">
           <h2 className="lista-group-title">Jogos</h2>
@@ -85,17 +85,6 @@ const ListaJogos: React.FC<{ onNavigate: (page: string) => void }> = ({ onNaviga
           </div>
         </section>
 
-        {isDesktop && (
-          <AdsterraSlot
-            placement="nativeBannerWeb"
-            style={{
-              margin: '8px auto 20px',
-              maxWidth: 960,
-              padding: '0 12px',
-              boxSizing: 'border-box',
-            }}
-          />
-        )}
 
         <div className="lista-section-toggle">
           <button

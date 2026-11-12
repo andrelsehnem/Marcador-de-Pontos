@@ -3,8 +3,6 @@ import { ArrowLeft } from 'lucide-react';
 import './ComoJogarCacheta.css';
 import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
 import { useThemeStyles } from '../../../shared/hooks/useThemeStyles';
-import { AdsterraSlot } from '../../../shared/components/Adsterra/Adsterra';
-import { useResponsive } from '../../../shared/hooks/useResponsive';
 
 
 interface ComoJogarCachetaProps {
@@ -14,7 +12,6 @@ interface ComoJogarCachetaProps {
 
 const ComoJogarCacheta: React.FC<ComoJogarCachetaProps> = ({ onBack, onPlayCacheta }) => {
   const themeStyles = useThemeStyles();
-  const { isDesktop } = useResponsive();
 
   return (
     <div
@@ -190,11 +187,6 @@ const ComoJogarCacheta: React.FC<ComoJogarCachetaProps> = ({ onBack, onPlayCache
             Ir para o marcador de Cacheta
           </button>
         </main>
-        {isDesktop && (
-          <aside className="como-jogar-cacheta-sidebar">
-            <AdsterraSlot placement="banner120x600Web" />
-          </aside>
-        )}
       </div>
     </div>
   );

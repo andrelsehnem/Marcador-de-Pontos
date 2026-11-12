@@ -486,7 +486,7 @@
 .app-sticky-cta {
   position: fixed;
   left: 50%;
-  bottom: 16px;
+  bottom: 96px;
   transform: translateX(-50%);
   z-index: 30;
   width: min(92vw, 620px);
@@ -558,7 +558,7 @@
   .stat { padding: 8px 16px; }
   .stats-bar { flex-wrap: wrap; gap: 0; }
   .app-sticky-cta {
-    bottom: 10px;
+    bottom: 90px;
     width: calc(100vw - 20px);
     padding: 10px 12px;
     gap: 10px;
