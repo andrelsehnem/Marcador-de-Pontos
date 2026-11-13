@@ -15,6 +15,7 @@ interface ThemeContextType {
   colors: ColorPalette;
   appearance: ThemeAppearance;
   isModeConfigurable: boolean;
+  ready: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -137,7 +138,7 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, effectiveTheme, toggleTheme, colorTheme, setColorTheme, colors, appearance, isModeConfigurable }}>
+    <ThemeContext.Provider value={{ theme, effectiveTheme, toggleTheme, colorTheme, setColorTheme, colors, appearance, isModeConfigurable, ready: themeLoaded && colorThemeLoaded }}>
       {children}
     </ThemeContext.Provider>
   );
