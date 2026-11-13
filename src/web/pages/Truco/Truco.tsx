@@ -234,7 +234,7 @@ export default function TrucoPaulista({ onBack }: { onBack: () => void }) {
                   📊 Marcador de Truco Online
                 </h2>
                 <p style={{ marginBottom: '15px' }}>
-                  Use este marcador de <strong>Truco Paulista</strong> para controlar a pontuação em suas partidas. O Truco é o jogo de cartas mais popular do Brasil e combina estratégia, blefe e adrenalina. A primeira dupla a atingir <strong>12 pontos</strong> vence a rodada.
+                  Use este marcador de <strong>Truco Paulista</strong> para controlar a pontuação em suas partidas. O Truco é o jogo de cartas mais popular do Brasil e combina estratégia, blefe e adrenalina. A primeira dupla a atingir <strong>12 pontos</strong> vence a partida.
                 </p>
 
                 <h3 style={{ 
@@ -263,7 +263,7 @@ export default function TrucoPaulista({ onBack }: { onBack: () => void }) {
                   <li style={{ marginBottom: '8px' }}><strong>Truco (3 pontos):</strong> Alguém aumentou apostando "Truco"</li>
                   <li style={{ marginBottom: '8px' }}><strong>Seis (6 pontos):</strong> Resposta com "Seis" após o Truco</li>
                   <li style={{ marginBottom: '8px' }}><strong>Nove (9 pontos):</strong> Resposta com "Nove" após o Seis</li>
-                  <li><strong>Doze (12 pontos):</strong> O máximo da rodada, pedido com "Doze"</li>
+                  <li><strong>Doze (12 pontos):</strong> O valor máximo da mão, pedido com "Doze"</li>
                 </ul>
               </div>
             )}

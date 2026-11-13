@@ -471,7 +471,7 @@ const Cacheta: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                   <li style={{ marginBottom: '8px' }}><strong>Observe o descarte:</strong> As cartas que seus adversários descartam revelam informações preciosas</li>
                   <li style={{ marginBottom: '8px' }}><strong>Planeje sequências:</strong> Sempre tente conectar cartas do mesmo naipe para facilitar compras</li>
                   <li style={{ marginBottom: '8px' }}><strong>Gestão de risco:</strong> Nem sempre vale a pena comprar do lixo; às vezes é melhor descartar algo seguro</li>
-                  <li><strong>Bata na hora certa:</strong> Ter 2-3 combinações já é o suficiente para bater em muitas mesas</li>
+                  <li><strong>Bata na hora certa:</strong> Ter 2-3 combinações já é suficiente para bater em muitas mesas</li>
                 </ul>
               </div>
             )}

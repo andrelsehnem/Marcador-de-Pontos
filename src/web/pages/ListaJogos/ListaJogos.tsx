@@ -114,7 +114,7 @@ const ListaJogos: React.FC<{ onNavigate: (page: string) => void }> = ({ onNaviga
             <div className="lista-info-card info-cacheta">
               <h3>🃏 Cacheta</h3>
               <p>
-                Um jogo de combinações onde o planejamento é essencial. Organize suas cartas em trincas e sequências. Suporta múltiplos jogadores e pontuações personalizadas para qualquer mesa.
+                Um jogo de combinações em que o planejamento é essencial. Organize suas cartas em trincas e sequências. Suporta múltiplos jogadores e pontuações personalizadas para qualquer mesa.
               </p>
             </div>
 
