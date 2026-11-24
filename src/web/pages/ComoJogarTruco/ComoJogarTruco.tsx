@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import './ComoJogarTruco.css';
 import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
+import LinkNavegacao from '../../../shared/components/LinkNavegacao';
 import { useThemeStyles } from '../../../shared/hooks/useThemeStyles';
 
 
@@ -208,13 +209,14 @@ const ComoJogarTruco: React.FC<ComoJogarTrucoProps> = ({ onBack, onPlayTruco }) 
           </p>
           </section>
 
-          <button
+          <LinkNavegacao
             className="como-jogar-truco-play-btn"
-            onClick={onPlayTruco}
+            href="/truco"
+            onNavigate={onPlayTruco}
             style={{ backgroundColor: themeStyles.buttonPrimary.bg, color: themeStyles.buttonPrimary.text }}
           >
             Ir para o marcador de Truco
-          </button>
+          </LinkNavegacao>
         </main>
       </div>
     </div>

@@ -433,6 +433,7 @@
   cursor: pointer;
   letter-spacing: 0.3px;
   text-align: left;
+  text-decoration: none;
   display: flex;
   align-items: center;
   gap: 10px;
