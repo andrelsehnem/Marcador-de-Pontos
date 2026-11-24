@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import './AppPromo.css';
+import { registrarEvento } from '../../services/analytics';
 
 export const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=dev.andre100.marcadorPontos';
 
 const CHAVE_FAIXA_FECHADA = 'app-promo-faixa-fechada';
 
-type GtagWindow = Window & { gtag?: (...args: unknown[]) => void };
-
 /** Abre a Play Store e registra o clique no Google Analytics (evento `clique_baixar_app`). */
 export const abrirPlayStore = (origem: string) => {
-  (window as GtagWindow).gtag?.('event', 'clique_baixar_app', { origem });
+  registrarEvento('clique_baixar_app', { origem });
   window.open(PLAY_STORE_URL, '_blank', 'noopener,noreferrer');
 };
 

@@ -2,6 +2,8 @@ import React, { useState, useEffect, lazy, Suspense } from 'react';
 import './web/styles/global.css';
 import { ThemeProvider } from './shared/contexts/ThemeContext';
 import Footer from './shared/components/Footer/Footer';
+import ApoioPix from './shared/components/ApoioPix/ApoioPix';
+import { registrarEvento } from './shared/services/analytics';
 import { Analytics } from '@vercel/analytics/react';
 
 const ListaJogos = lazy(() => import('./web/pages/ListaJogos/ListaJogos'));
@@ -82,6 +84,20 @@ const SEO_BY_PAGE: Record<WebPage, { title: string; description: string; path: s
   },
 };
 
+const JOGOS: WebPage[] = ['truco', 'cacheta', 'marcador', 'canastra'];
+
+/**
+ * Registra no Analytics a abertura de cada jogo e do menu de jogos. `origem` é a página do clique.
+ * O jogo vai no nome do evento (abrir_jogo_truco...) para aparecer direto na lista de eventos.
+ */
+const registrarNavegacao = (destino: WebPage, origem: WebPage) => {
+  if (JOGOS.includes(destino)) {
+    registrarEvento(`abrir_jogo_${destino}`, { origem });
+  } else if (destino === 'listajogos') {
+    registrarEvento('abrir_menu_jogos', { origem });
+  }
+};
+
 const resolvePage = (pathname: string): WebPage => {
   const path = pathname.replace(/\/$/, '') || '/';
   const pages = Object.keys(SEO_BY_PAGE) as WebPage[];
@@ -160,6 +176,7 @@ export default function App({ initialPage }: { initialPage?: WebPage }) {
   }, [currentPage]);
 
   const navigateTo = (page: WebPage) => {
+    registrarNavegacao(page, currentPage);
     setCurrentPage(page);
     const path = page === 'landing' ? '/' : `/${page}`;
     window.history.pushState({}, '', path);
@@ -202,6 +219,7 @@ export default function App({ initialPage }: { initialPage?: WebPage }) {
           </Suspense>
         </main>
         <Footer onNavigate={navigateToTop} fixo={currentPage === 'landing'} />
+        <ApoioPix />
       </ThemeProvider>
       <Analytics />
     </div>
