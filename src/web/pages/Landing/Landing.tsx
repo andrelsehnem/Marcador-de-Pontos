@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Landing.css';
 import AppPromo, { abrirPlayStore } from '../../../shared/components/AppPromo/AppPromo';
+import LinkNavegacao from '../../../shared/components/LinkNavegacao';
 
 const CARDS: { suit: string; red: boolean }[] = [
   { suit: '♠', red: false },
@@ -171,24 +172,27 @@ const LandingPage = ({ onNavigate }: { onNavigate: (page: string) => void }) => 
               Sem instalação, sem cadastro. Abra e comece a jogar agora.
             </p>
             <div className="game-buttons">
-              <button
+              <LinkNavegacao
                 className="game-button cacheta-btn"
-                onClick={() => onNavigate('cacheta')}
+                href="/cacheta"
+                onNavigate={() => onNavigate('cacheta')}
               >
                 🃏 Cacheta
-              </button>
-              <button
+              </LinkNavegacao>
+              <LinkNavegacao
                 className="game-button truco-btn"
-                onClick={() => onNavigate('truco')}
+                href="/truco"
+                onNavigate={() => onNavigate('truco')}
               >
                 🎯 Truco
-              </button>
-              <button
+              </LinkNavegacao>
+              <LinkNavegacao
                 className="game-button full-list-btn"
-                onClick={() => onNavigate('listajogos')}
+                href="/listajogos"
+                onNavigate={() => onNavigate('listajogos')}
               >
                 📋 Ver lista completa de jogos
-              </button>
+              </LinkNavegacao>
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import './ComoJogarCacheta.css';
 import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
+import LinkNavegacao from '../../../shared/components/LinkNavegacao';
 import { useThemeStyles } from '../../../shared/hooks/useThemeStyles';
 
 
@@ -179,13 +180,14 @@ const ComoJogarCacheta: React.FC<ComoJogarCachetaProps> = ({ onBack, onPlayCache
           </p>
           </section>
 
-          <button
+          <LinkNavegacao
             className="como-jogar-cacheta-play-btn"
-            onClick={onPlayCacheta}
+            href="/cacheta"
+            onNavigate={onPlayCacheta}
             style={{ backgroundColor: themeStyles.buttonPrimaryAlt.bg, color: '#ffffff' }}
           >
             Ir para o marcador de Cacheta
-          </button>
+          </LinkNavegacao>
         </main>
       </div>
     </div>

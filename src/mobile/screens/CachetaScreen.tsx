@@ -391,7 +391,7 @@ const CachetaScreen: React.FC<CachetaScreenProps> = ({ onBack }) => {
                   }}
                   keyboardType="number-pad"
                   maxLength={3}
-                  placeholder="Ex: 10"
+                  placeholder="Ex.: 10"
                   placeholderTextColor={appearance.border}
                 />
                 <TouchableOpacity

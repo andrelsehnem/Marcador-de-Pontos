@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './ListaJogos.css';
 import ThemeToggle from '../../../shared/components/ThemeToggle/ThemeToggle';
 import AppPromo from '../../../shared/components/AppPromo/AppPromo';
+import LinkNavegacao from '../../../shared/components/LinkNavegacao';
 
 const ListaJogos: React.FC<{ onNavigate: (page: string) => void }> = ({ onNavigate }) => {
   const [expandContent, setExpandContent] = useState(false);
@@ -42,46 +43,46 @@ const ListaJogos: React.FC<{ onNavigate: (page: string) => void }> = ({ onNaviga
         <section className="lista-group" aria-label="Seção de jogos">
           <h2 className="lista-group-title">Jogos</h2>
           <div className="lista-grid">
-            <button className="lista-card card-gold" onClick={() => onNavigate('truco')}>
+            <LinkNavegacao className="lista-card card-gold" href="/truco" onNavigate={() => onNavigate('truco')}>
               <div className="lista-card-icon">🎯</div>
               <div className="lista-card-title">Truco</div>
               <div className="lista-card-text">Abrir marcador de pontos</div>
-            </button>
+            </LinkNavegacao>
 
-            <button className="lista-card card-blue" onClick={() => onNavigate('cacheta')}>
+            <LinkNavegacao className="lista-card card-blue" href="/cacheta" onNavigate={() => onNavigate('cacheta')}>
               <div className="lista-card-icon">🃏</div>
               <div className="lista-card-title">Cacheta</div>
               <div className="lista-card-text">Abrir marcador de pontos</div>
-            </button>
+            </LinkNavegacao>
 
-            <button className="lista-card card-blue" onClick={() => onNavigate('marcador')}>
+            <LinkNavegacao className="lista-card card-blue" href="/marcador" onNavigate={() => onNavigate('marcador')}>
               <div className="lista-card-icon">🧮</div>
               <div className="lista-card-title">Marcador Livre</div>
               <div className="lista-card-text">Equipe A x Equipe B com +1 e -1</div>
-            </button>
+            </LinkNavegacao>
 
-            <button className="lista-card card-purple" onClick={() => onNavigate('canastra')}>
+            <LinkNavegacao className="lista-card card-purple" href="/canastra" onNavigate={() => onNavigate('canastra')}>
               <div className="lista-card-icon">🎲</div>
               <div className="lista-card-title">Canastra</div>
               <div className="lista-card-text">Marcador para 2 times com histórico editável</div>
-            </button>
+            </LinkNavegacao>
           </div>
         </section>
 
         <section className="lista-group" aria-label="Seção de como jogar">
           <h2 className="lista-group-title">Como jogar</h2>
           <div className="lista-grid">
-            <button className="lista-card card-outline" onClick={() => onNavigate('como-jogar-truco')}>
+            <LinkNavegacao className="lista-card card-outline" href="/como-jogar-truco" onNavigate={() => onNavigate('como-jogar-truco')}>
               <div className="lista-card-icon">📘</div>
               <div className="lista-card-title">Como jogar Truco</div>
               <div className="lista-card-text">Regras e dicas rápidas</div>
-            </button>
+            </LinkNavegacao>
 
-            <button className="lista-card card-outline" onClick={() => onNavigate('como-jogar-cacheta')}>
+            <LinkNavegacao className="lista-card card-outline" href="/como-jogar-cacheta" onNavigate={() => onNavigate('como-jogar-cacheta')}>
               <div className="lista-card-icon">📗</div>
               <div className="lista-card-title">Como jogar Cacheta</div>
               <div className="lista-card-text">Regras e dicas rápidas</div>
-            </button>
+            </LinkNavegacao>
           </div>
         </section>
 
@@ -114,7 +115,7 @@ const ListaJogos: React.FC<{ onNavigate: (page: string) => void }> = ({ onNaviga
             <div className="lista-info-card info-cacheta">
               <h3>🃏 Cacheta</h3>
               <p>
-                Um jogo de combinações onde o planejamento é essencial. Organize suas cartas em trincas e sequências. Suporta múltiplos jogadores e pontuações personalizadas para qualquer mesa.
+                Um jogo de combinações em que o planejamento é essencial. Organize suas cartas em trincas e sequências. Suporta múltiplos jogadores e pontuações personalizadas para qualquer mesa.
               </p>
             </div>
 

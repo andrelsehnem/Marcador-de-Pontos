@@ -10,7 +10,7 @@ const ThemeToggle: React.FC = () => {
     <button 
       className="theme-toggle"
       onClick={toggleTheme}
-      aria-label="Toggle theme"
+      aria-label="Alternar tema"
       title={`Mudar para tema ${theme === 'dark' ? 'claro' : 'escuro'}`}
       style={{
         background: theme === 'dark' 

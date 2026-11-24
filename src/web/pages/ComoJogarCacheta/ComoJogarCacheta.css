@@ -113,6 +113,10 @@
   font-weight: 700;
   cursor: pointer;
   margin-top: 8px;
+  display: block;
+  box-sizing: border-box;
+  text-align: center;
+  text-decoration: none;
 }
 
 @media (max-width: 768px) {
